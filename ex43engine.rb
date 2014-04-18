@@ -23,18 +23,19 @@ class Engine
   end
 
   def leave_hub
-    puts "Which color do you head towards?"
-#    room = nil
-    room = Map.to_room(prompt)
-    while !room or room.brightness == 3
+    indicator = true
+    while indicator
+      puts "Which color do you head towards?"
+      room = Map.to_room(prompt)
       if !room
         puts "Please try an actual color!"
       elsif room.brightness == 3
         puts "That door's already open."
         puts "Something tells you that you don't need to head back there again."
         puts "Try another color."
+      else
+        indicator = false           
       end
-      room = Map.to_room(prompt)
     end
 	  puts "Ok, you head to the #{room.color} glow."
 	  puts "You see that it is in fact from coming under a door."
