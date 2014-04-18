@@ -4,4 +4,4 @@ This is a puzzle game masquerading as a text adventure game.  Part of the game i
 
 This project came out of an exercise in Learn Ruby The Hard Way.  I am learning Ruby via building this project.
 
-To run it, just type "ruby ex43engine.rb."  At the moment it is incomplete so it will crash depending on where in the rooms you try to go.  The red room does have something you can do, however.
+To run it, collect all ten .rb files in one directory and type "ruby ex43engine.rb."  At the moment it is incomplete so it will crash depending on where in the rooms you try to go.  The red room does have something you can do, however.
