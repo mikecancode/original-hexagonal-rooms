@@ -20,7 +20,7 @@ class RedRoom < PuzzleRoom
 		]
 	
   def initialize
-  	@brightness = 2
+  	@brightness = 0
   end
   
   def brightness
@@ -90,19 +90,19 @@ class RedRoom < PuzzleRoom
   def play
     start_fresh_game
     @@used_words.push(@winning_word)
-  		while @gallows_state < 6
-  			show_current_state
-  			current_guess = prompt_and_check_legit
-  			compare_letters_and_update(current_guess)
-  			if all_matched?
-  				you_see_description				
-  				puts "YOU WIN! Nice job!"; puts
-          return "win"
-  			end
+  	while @gallows_state < 6
+  		show_current_state
+  		current_guess = prompt_and_check_legit
+  		compare_letters_and_update(current_guess)
+  		if all_matched?
+  			you_see_description				
+  			puts "YOU WIN! Nice job!"; puts
+        return "win"
   		end
-  		puts "The gallows " + GALLOWS_ARRAY[@gallows_state]
-  		puts "It collapses. YOU LOSE. Sorry, dude."; puts
   	end
+  	puts "The gallows " + GALLOWS_ARRAY[@gallows_state]
+  	puts "It collapses. YOU LOSE. Sorry, dude."; puts
+  end
 	
   def show_current_state
   	puts @winning_word

@@ -1,7 +1,7 @@
 class YellowRoom < PuzzleRoom
 
 	def initialize
-		@brightness = 3
+		@brightness = 0
 	end
 
 	def color

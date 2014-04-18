@@ -1,20 +1,5 @@
 class OrangeRoom < PuzzleRoom
 
-	def initialize
-		@brightness = 3
-	end
-
-	def color
-		"orange"
-	end
-  
-#  new_game = MemoryRound.new
-#  new_game.play
-
-end
-
-class MemoryRound
-
 	WORD_ARRAY = [ "bill", "chill", "dill", "drill", "fill", "frill",
 								 "gill", "grill", "hill", "ill", "Jill", "kill",
 								 "krill", "mill", "pill", "quill", "shrill",
@@ -31,12 +16,23 @@ class MemoryRound
 	TRANSLATE = { "a" => 0, "b" => 1, "c" => 2, "d" => 3, "e" => 4, "f" => 5 }
 
 	def initialize
+		@brightness = 0
+	end
 
+  def brightness
+    @brightness
+  end
+	
+  def color
+		"orange"
+	end
+	
+  def start_fresh_game
 		@current_first_guess = []
 		@current_second_guess = []
 		@players_board = []
 		@words_found = []
-		
+
 		6.times{
 			players_board_line = []
 			6.times {
@@ -63,11 +59,47 @@ class MemoryRound
 		
 	end
 
+  def puzzle_intro_description
+    puts "You now see an array of 36 small CRT monitors floating in front of you."
+    puts "They are glowing a #{BRIGHTNESS_MAPPING[brightness]} #{color}."
+    puts "They each have a single \"-\" on them."
+    puts "In addition, there are 24 even smaller monitors."
+    puts "They have the letters a-f and the numbers 1-6 on them."
+    puts "Below the array is another monitor."
+    puts "On it you see the following:"
+    puts
+  end
+
+  def play_a_round?(response)
+    if response == "y"      
+  	  result = play
+      if result == "win"
+        if brightness == 2
+  	      puts "..."
+          puts "You've won three rounds!  Nice One!"
+          puts "That deserves a YIP from the Memory Guy!"
+          puts
+          puts "YIP"
+  	      puts
+  	      return "win", "complete"
+        else
+          return "win", "incomplete"
+        end
+      else
+        return "lose", "incomplete"
+      end
+    else
+      puts "OK, see you later."; puts
+      return "no_play"
+    end
+  end
+
 	def prompt
 		print "> "
 	end
 	
 	def play
+    start_fresh_game
 		while @words_found.length < 18
 			3.times { puts }
 			show_board(@players_board)
@@ -81,7 +113,8 @@ class MemoryRound
 			show_guess(@current_second_guess, @players_board, @winning_board)
 			respond_to_guess(@players_board, @current_first_guess, @current_second_guess)
 			if @words_found.length == 18
-				puts "Nice job! YOU WIN!"
+				puts "Nice job! YOU WIN!"; puts
+        return "win"
 			else
 				go_again_query
 			end
@@ -140,7 +173,7 @@ class MemoryRound
 			if response == "n"
 				puts
 				puts "OK, see you later."
-				exit
+				return "lose"
 			else
 				puts
 				puts "I'm sorry, I didn't quite get that.  Could you try again?"
