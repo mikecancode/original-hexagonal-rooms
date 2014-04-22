@@ -67,8 +67,8 @@ class HangmanRound
 	end
 	
 	def show_current_state
-		puts @winning_word
-		print @@used_words
+#		puts @winning_word
+#		print @@used_words
 		you_see_descrip
 		if !@failed_letters.empty?
 			puts "The following letters are floating to the left of the image:"
