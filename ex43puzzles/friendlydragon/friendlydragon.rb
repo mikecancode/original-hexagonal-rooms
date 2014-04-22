@@ -48,41 +48,53 @@ class FriendlyDragon
                             [ "dig your way underneath the wall with the handy shovel you see nearby",
                               "Good effort for sure, and you dig a sizeable hole.\nOut of which crawls a giant possum.  You turn and run as fast as you can." ]
                           ],
-                          [ [ "choice_1_1",
-                              "result 1_1" ],
+                          [ [ "dig a hole really quickly with the handy shovel that you've just found, and crawl into the hole just before the boulder gets to you",
+                              "Wow, that actually worked!\nYou emerge a little battered and bruised and dirty, but you've survived a boulder attack." ],
                             [ "turn and run from the boulder, just outracing it to the mouth of the tunnel",
-                              "Right." ],
-                            [ "choice_1_3",
-                              "result 1_3" ]
+                              "Well done, Indiana Jones.  Only problem: you just ended up back where you started!\nYou turn around and start back into the tunnel." ],
+                            [ "press against either side of the wall and hope you'll fit",
+                              "Nope, you don't fit.  You get the wind knocked out of you and then some." ]
                           ],
-                          [ [ "choice_1_1",
-                              "result 1_1" ],
-                            [ "choice_1_2",
-                              "result 1_2" ],
-                            [ "choice_1_3",
-                              "result 1_3" ]
+                          [ [ "shout \"OK, what is it with all of these weird noises in my ears anyway!!?!\"",
+                              "\"Fine, I'll leave you alone\" says the ghostly voice sheepishly.\n\"I just get so bored in this tunnel is all.\"  Then it vanishes." ],
+                            [ "quietly ask the ghostly voice to please go away",
+                              "\"Don't try and be all polite with me!\" says the ghostly voice.\n\"I am a scary ghostly voice!\"  You suddenly get pretty scared." ],
+                            [ "quietly ask the ghostly voice to tell you what it wants",
+                              "\"Don't try and ask me what I want!\" says the ghostly voice.\n\"I am a scary ghostly voice!\"  You suddenly get pretty scared." ]
                           ],
-                          [ [ "choice_1_1",
-                              "result 1_1" ],
-                            [ "choice_1_2",
-                              "result 1_2" ],
-                            [ "choice_1_3",
-                              "result 1_3" ]
+                          [ [ "pace in circles",
+                              "You start pacing just to think, but then you accidentally step on a button.\nSlowly the pit's floor rises back up to ground level." ],
+                            [ "climb the vines that you see conveniently hanging down into the pit",
+                              "The vines are strong.  Unfortunately, you get a bit carried away.\nYou climb to the ceiling, bump your head, and fall to the floor." ],
+                            [ "jump up and down on the convenient trampoline you see in the pit",
+                              "It works pretty well!  Unfortunately, you get a bit carried away.\nYou bounce to the ceiling, bump your head, and fall to the floor." ]
                           ],
-                          [ [ "choice_1_1",
-                              "result 1_1" ],
-                            [ "choice_1_2",
-                              "result 1_2" ],
-                            [ "choice_1_3",
-                              "result 1_3" ]
+                          [ [ "look at the altar for a bit, then keep moving",
+                              "Good call!  As you're about to find out, the dragon doesn't have much loot left these days. \nDon't touch his stuff." ],
+                            [ "drink the liquid in the plainest cup",
+                              "What?  Why are you drinking random liquid in a creepy tunnel?\nYou feel really sick, and pass out almost immediately." ],
+                            [ "dump out the liquid in the fanciest cup, then put the cup in your satchel",
+                              "You hear a booming voice shout \"Don't touch my STUFF!!!\"\nYeah, you really should be careful about taking shiny stuff near a dragon." ]
                           ]
                         ]
   
-  DRAGON_QUESTIONS = ["question_1", "question_2", "question_3"]
+  DRAGON_QUESTIONS =  [ "\"First, I have no idea how to make friends.\"\n\"I'm really lonely in this cave but everyone is scared of me.\"\n\"What do you think?\"",
+                        "\"Secondly, I keep losing my treasure.\"\n\"I don't know who can possibly be taking it from me.\"\n\"Any thoughts?\"",
+                        "\"Finally, do you think it's possible for a dragon to find love in this crazy world?\""
+                      ]
   
-  DRAGON_ANSWERS =  [ ["answer_1_1", "answer_1_2", "answer_1_3"],
-                      ["answer_2_1", "answer_2_2", "answer_2_3"],
-                      ["answer_3_1", "answer_3_2", "answer_3_3"]
+  DRAGON_ANSWERS =  [ [ [ "answer \"Honestly, you could just lessen the number of booby traps in this place\"", nil ],
+                        [ "answer \"I don't know how dragons make friends.  Maybe you could look online\"", nil ],
+                        [ "answer \"Why wouldn't they be scared of you?  You're a scary dragon\"", nil ]
+                      ],
+                      [ [ "answer \"I think this one's easy.  You keep leaving it out on altars.  Hide it away somewhere!\"", nil ],
+                        [ "answer \"I don't know about any lost treasure, but I can sell you this cool cup I have in my satchel\"", nil ],
+                        [ "answer \"Hmm. Maybe you just need to look in the Dragon Want Ads to see if someone is selling your stuff\"", nil ]
+                      ],
+                      [ [ "answer \"Of course it is!  But probably only with another dragon\"", nil ],
+                        [ "answer \"Man, that's a tough one.  Probably, but maybe not\"", nil ],
+                        [ "answer \"Not with all these booby traps you're packing\"", nil ]
+                      ]
                     ]
   
   def prompt
@@ -133,7 +145,7 @@ class FriendlyDragon
   end
   
   def end_of_tunnel
-    puts "You reach the end of the tunnel and see a DRAGON."
+    puts; puts "You reach the end of the tunnel and see a DRAGON."
     if @@levels_completed < 2
       puts "He goes ROAR and breathes fire and blows you back to the beginning."
       @@levels_completed += 1
@@ -146,14 +158,22 @@ class FriendlyDragon
     puts
     puts "It's that dragon that's been breathing fire on you and driving you nuts."
     puts "This time he doesn't breathe fire.  He sits down and says \"Let's talk.\""
+    puts "\"You've come through the tunnel three times and beat all of my challenges.\""
+    puts "\"I'm betting you're a pretty smart guy.\""
+    puts "\"I have three questions that have been vexing me for the longest time.\""
+    puts "\"Any chance you could help me with them?\""
+    puts "You nod yes.  Not being in a position to do much else."
+    puts "This is a giant fire-breathing dragon after all."
+    puts "\"OK\" says the dragon.  \"So here are my questions.\""
     right_answers = 0    
     (0..2).each do |i| 
       if choices_and_result(DRAGON_QUESTIONS[i], DRAGON_ANSWERS[i])
-        puts "Interesting."
+        puts "The dragon pauses, tilts his head, then says \"Interesting.\""
         right_answers += 1
       end
     end
     if right_answers == 3
+      puts
       puts "The dragon looks pensive."
       puts "Then he says \"Hmm....\""
       puts "\"You know what... You're right!\""
