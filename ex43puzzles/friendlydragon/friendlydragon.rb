@@ -9,27 +9,16 @@ class FriendlyDragon
                 "trap_7", "trap_8", "trap_9"
               ]
   
-  CHOICES = [ ["choice_1_1", "choice_1_2", "choice_1_3"],                
-              ["choice_2_1", "choice_2_2", "choice_2_3"],
-              ["choice_3_1", "choice_3_2", "choice_3_3"], 
-              ["choice_4_1", "choice_4_2", "choice_4_3"],
-              ["choice_5_1", "choice_5_2", "choice_5_3"],
-              ["choice_6_1", "choice_6_2", "choice_6_3"],
-              ["choice_7_1", "choice_7_2", "choice_7_3"],
-              ["choice_8_1", "choice_8_2", "choice_8_3"],
-              ["choice_9_1", "choice_9_2", "choice_9_3"]
-            ]
-            
-  RAMIFICATIONS = [ ["ramification_1_1", "ramification_1_2", "ramification_1_3"],                
-                    ["ramification_2_1", "ramification_2_2", "ramification_2_3"],
-                    ["ramification_3_1", "ramification_3_2", "ramification_3_3"], 
-                    ["ramification_4_1", "ramification_4_2", "ramification_4_3"],
-                    ["ramification_5_1", "ramification_5_2", "ramification_5_3"],
-                    ["ramification_6_1", "ramification_6_2", "ramification_6_3"],
-                    ["ramification_7_1", "ramification_7_2", "ramification_7_3"],
-                    ["ramification_8_1", "ramification_8_2", "ramification_8_3"],
-                    ["ramification_9_1", "ramification_9_2", "ramification_9_3"]
-                  ]
+  CHOICES_AND_RESULTS = [ [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]],
+                          [["choice_1_1", "result 1_1"], ["choice_1_2", "result 1_2"], ["choice_1_3", "result 1_3"]]
+                        ]
   
   DRAGON_QUESTIONS = ["question_1", "question_2", "question_3"]
   
@@ -56,7 +45,7 @@ class FriendlyDragon
   end
   
   def access_trap(i)
-    if offer_choices(TRAPS[i], CHOICES[i])
+    if choices_and_result(TRAPS[i], CHOICES_AND_RESULTS[i])
       puts "Well done! You move on."
       true
     else
@@ -65,17 +54,18 @@ class FriendlyDragon
     end
   end
  
-  def offer_choices(question, choices)
+  def choices_and_result(question, choices_and_results)
     letters = ["a", "b", "c"]
-    choices_shuffled = choices.shuffle    
+    choices_and_results_shuffled = choices_and_results.shuffle    
     puts question
     puts "Do you:"
-    (0..2).each { |i| puts letters[i] + ": " + choices_shuffled[i] + "?" }
+    (0..2).each { |i| puts letters[i] + ": " + choices_and_results_shuffled[i][0] + "?" }
     response = nil
     while !response
       response = letters.index(prompt)
     end
-    choices_shuffled[response] == choices[0]
+    puts choices_and_results_shuffled[response][1]
+    choices_and_results_shuffled[response] == choices_and_results[0]
   end
     
   def prompt
@@ -99,7 +89,7 @@ class FriendlyDragon
     puts "This time he doesn't breathe fire.  He sits down and says \"Let's talk.\""
     right_answers = 0    
     (0..2).each do |i| 
-      if offer_choices(DRAGON_QUESTIONS[i], DRAGON_ANSWERS[i])
+      if choices_and_result(DRAGON_QUESTIONS[i], DRAGON_ANSWERS[i])
         puts "Interesting."
         right_answers += 1
       end
