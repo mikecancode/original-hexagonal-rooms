@@ -1,6 +1,6 @@
 class FriendlyDragon
 
-  @@levels_completed = 2
+  @@levels_completed = 0
   
   QUESTIONS = [ "question_1", "question_2", "question_3", 
                 "question_4", "question_5", "question_6",
@@ -39,6 +39,7 @@ class FriendlyDragon
         end
       end
     end
+    end_of_tunnel
   end
   
   def access_question(i)
@@ -75,34 +76,24 @@ class FriendlyDragon
     if @@levels_completed < 2
       puts "He goes ROAR and breathes fire and blows you back to the beginning."
       @@levels_completed += 1
-      win_round_but_not_game
     else
       dragon_faceoff
     end
   end
   
-  def lose_round
-    puts "Please try again some other time."
-  end
-
   def dragon_faceoff
-    puts "You see that dragon that's been driving you nuts again."
+    puts "It's that dragon that's been breathing fire on you and driving you nuts."
     puts "This time he doesn't breathe fire.  He sits down and says \"Let's talk.\""
     right_answers = 0    
-    (0.2).each do |i| 
-      (0.2).each do |j|
-        dragon_answers_ = DRAGON[i][j].delete_at(0)
-        response = answer_question(DRAGON[i][0], dragon_answers)
-        if DRAGON[i][j][response] + 1 == j
-          puts "Interesting."
-          right_answers += 1
-        end
+    (0..2).each do |i| 
+      if ask_question(DRAGON_QUESTIONS[i], DRAGON_ANSWERS[i])
+        puts "Interesting."
+        right_answers += 1
       end
     end
     if right_answers == 3
-      puts "you win!"
-    else
-      lose_round
+      puts "You Win!"
+      "win"
     end
   end
   
@@ -114,19 +105,20 @@ response = gets.chomp.downcase
 while response == "y"	
 	new_round = FriendlyDragon.new
 	round = new_round.play
-	if round == 3
+	if round == "win"
 		puts
-		puts "You've won three rounds!  Nice One!"
-		puts "That deserves a YURP from the Hangman!"
+		puts "You've bested the Dragon!  Nice One!"
+		puts "That deserves a YURP from the Dragon!"
 		puts
 		puts "YURP"
 		puts
 		exit
-	end
-	puts
-	puts "Do you want to play again?"
-	print "> "
-	response = gets.chomp
+  else
+    puts
+	  puts "Do you want to go down the tunnel again?"
+	  print "> "
+	  response = gets.chomp
+  end
 end
 puts "Ok, see you later."
 exit
