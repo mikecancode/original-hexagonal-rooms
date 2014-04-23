@@ -1,8 +1,6 @@
 class Anagrams
 
-  # for the new hints (e.g. C______ D______ for Charles Dickens), look up gsub and regular expressions
-
-  @@used_lists = []
+  @@used_lists = ["used_list_seed"]
   @@wins_total = 0
 
   STAR_WARS_CHARS = { "Loans Ho" => "Han Solo",
@@ -89,14 +87,14 @@ class Anagrams
   
   def play
     lists = [STAR_WARS_CHARS, SUPERHEROES, AUTHORS, FILMS, BANDS, CITIES]
-    hints = ["A Galaxy Far, Far Away", "Up, up and away!", "They penned the classics.", "No Rotten Tomatoes here!", 
-              "These guys didn't roll, they ___ed!", "The 10 Largest In The Country"]
-    @current_list = lists[which_list?]
+    hints = ["A Galaxy Far, Far Away", "Up, Up And Away!", "They Penned The Classics.", "No Rotten Tomatoes Here!", 
+              "These Guys Didn't Just Roll, They ___ed!", "The 10 Largest In The Country"]
+    @current_list = "used_list"
     while @@used_lists.include? @current_list
       @current_list = lists[which_list?]
     end
     puts "Hint:"; puts hints[lists.index(@current_list)]
-    final_score = ask_the_questions
+    final_score = go_through_list
     if final_score >= 8
       puts "Nice job! #{final_score} out of 10! You won that category!"
       @@used_lists.push(@current_list)
@@ -106,22 +104,39 @@ class Anagrams
     end
   end
 
-  def ask_the_questions
+  def go_through_list
     @current_list.each do | question, answer |
-      puts "Rewrite."; puts question
-      if prompt == answer
-        puts "Well done!"; puts
-        @score += 1
-      else
-        puts "Not quite. Sorry."; puts
-      end
+      ask_question(question, answer)
     end
     @score
   end
-
+  
+  def ask_question(question, answer)
+    (0..1).each do |i|
+      puts; puts "Rewrite."
+      puts question
+      if prompt == answer
+        puts "Well done!"
+        @score += 1
+        return         
+      else
+        puts "Not quite. Sorry."
+        if i == 0
+          puts; puts "Here's another hint:"
+          puts answer.gsub(/[a-z]/, "_")
+        end
+      end
+    end
+  end
+    
   def which_list?
-    puts "Pick a number from 1 to 6."
-    prompt.to_i
+    puts "Pick a number from 1 to 6!"
+    number = prompt
+      while number !~ /[1-6]/
+        puts "No, from the other 1 to 6!"
+        number = prompt
+      end
+    number.to_i - 1
   end
   
 end
