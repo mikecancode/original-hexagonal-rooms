@@ -1,8 +1,7 @@
 class Anagrams
 
-  @@used_lists = ["used_list_seed"]
-  @@wins_total = 0
-
+  @@used_lists = ["seed"]
+  
   STAR_WARS_CHARS = { "Loans Ho" => "Han Solo",
                       "Sulky Lark Week" => "Luke Skywalker",
                       "Increases Lip" => "Princess Leia",
@@ -17,7 +16,7 @@ class Anagrams
   
   SUPERHEROES = { "Mean Spur" => "Superman",
                   "Bantam" => "Batman",
-                  "Armed Spin" => "Spider Man",
+                  "Arm-ed Spin" => "Spider-Man",
                   "Warn Woodmen" => "Wonder Woman",
                   "A Mania Practice" => "Captain America",
                   "Rennet Angler" => "Green Lantern",
@@ -86,10 +85,11 @@ class Anagrams
   end
   
   def play
+    puts "Remember, Case Counts!"
     lists = [STAR_WARS_CHARS, SUPERHEROES, AUTHORS, FILMS, BANDS, CITIES]
     hints = ["A Galaxy Far, Far Away", "Up, Up And Away!", "They Penned The Classics.", "No Rotten Tomatoes Here!", 
               "These Guys Didn't Just Roll, They ___ed!", "The 10 Largest In The Country"]
-    @current_list = "used_list"
+    @current_list = "seed"
     while @@used_lists.include? @current_list
       @current_list = lists[which_list?]
     end
