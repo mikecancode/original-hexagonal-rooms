@@ -11,11 +11,13 @@ require_relative "ex43map"
 class Engine					
 	
 	def prompt
+    puts
 		print "> "
 		response = gets.chomp.downcase
 	end
 
 	def start
+    puts
 		puts "You wake up in a dimly lit area.  Your head hurts."
     room = Map.hub
     room.hubroom_colors_description
@@ -30,6 +32,7 @@ class Engine
       if !room
         puts "Please try an actual color!"
       elsif room.brightness == 3
+        puts
         puts "That door's already open."
         puts "Something tells you that you don't need to head back there again."
         puts "Try another color."
@@ -37,8 +40,10 @@ class Engine
         indicator = false           
       end
     end
+    puts
 	  puts "Ok, you head to the #{room.color} glow."
-	  puts "You see that it is in fact from coming under a door."
+	  puts
+    puts "You see that it is in fact from coming under a door."
 	  puts "You try the door.  It is unlocked.  You open it and step through."
 	  puts "The door slams shut behind you."
 	  puts "It doesn't look like you're going back through it anytime soon."
@@ -62,7 +67,10 @@ class Engine
 
   def which_way?
     puts "Which way do you want to go?  Left, right, forward, or back?"
-    check_legit_direction(prompt)
+    direction = check_legit_direction(prompt)
+    puts
+    puts "Ok, you go #{direction}."
+    direction
   end
   
 	def check_legit_direction(direction)
@@ -75,12 +83,14 @@ class Engine
 	end
   
 	def counterclockwise(room)
-		puts "You go towards the #{Map.counterclockwise(room).color} glow and push open the door you find there."
+		puts
+    puts "You go towards the #{Map.counterclockwise(room).color} glow and push open the door you find there."
     Map.counterclockwise(room)
 	end
 
 	def clockwise(room)
-		puts "You go towards the #{Map.clockwise(room).color} glow and push open the door you find there."
+		puts
+    puts "You go towards the #{Map.clockwise(room).color} glow and push open the door you find there."
     Map.clockwise(room)
 	end
   
@@ -101,13 +111,16 @@ class Engine
         round_result = room.play_a_round?(prompt)
         if round_result[0] == "win"
           go_to_hub(room, round_result[1])
-        elsif round_result[0] == "lose"
+        elsif round_result[0] == "lose" or round_result[0] == "quit"
+          puts
           puts "You watch the machinery dismantle itself."
         end
       else
+        puts
         puts "Actually, you really can't see anything else to do here."
       end
     else
+      puts
       puts "OK."
     end
   end	
@@ -122,8 +135,10 @@ class Engine
   end
     
   def inward(room)
+    puts
     puts "You size up this crazy door.  Maybe there's some way to open it after all? Try a magical password, maybe?"
     password = prompt
+    puts
     puts "Nope, #{password} definitely isn't it."
     puts "You turn around."
     room

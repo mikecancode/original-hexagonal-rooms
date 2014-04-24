@@ -18,6 +18,7 @@ class PuzzleRoom
     if objective_direction_index?(direction_youre_facing) % 2 == 1
       puts "You close the door behind you.  It doesn't lock or anything sinister."
     end
+    puts
     puts "The room is glowing #{BRIGHTNESS_MAPPING[brightness]} #{color}."
 		puts "To your left #{description_second_half(direction_youre_facing,0)}"
 		puts "To your right #{description_second_half(direction_youre_facing,2)}"
@@ -40,6 +41,7 @@ class PuzzleRoom
   end
   
   def machinery_description
+    puts
     puts "As you get closer the machinery reveals itself to be a mass of antiquated technology."
     puts "You see vacuum tubes, cables and old CRT monitors, among a lot of other items."
     puts "You approach it even closer.  It rotates, shifts, and morphs into a discernable shape."

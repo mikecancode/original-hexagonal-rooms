@@ -42,6 +42,7 @@ class RedRoom < PuzzleRoom
   end
   		
   def puzzle_intro_description
+    puts
     puts "You now see six huge CRT monitors floating in front of you, arranged horizontally."
     puts "They are glowing a #{BRIGHTNESS_MAPPING[brightness]} #{color}."
     puts "They each have a single, blinking \"_\" on them."
@@ -72,7 +73,9 @@ class RedRoom < PuzzleRoom
         return "lose", "incomplete"
       end
     else
-      puts "OK, see you later."; puts
+      puts
+      puts "OK, see you later."
+      puts
       return "no_play"
     end
   end
@@ -101,12 +104,10 @@ class RedRoom < PuzzleRoom
   		end
   	end
   	puts "The gallows " + GALLOWS_ARRAY[@gallows_state]
-  	puts "It collapses. YOU LOSE. Sorry, dude."; puts
+  	puts "It collapses. YOU LOSE. Sorry, dude."
   end
 	
   def show_current_state
-  	puts @winning_word
-  	print @@used_words
   	you_see_description
   	if !@failed_letters.empty?
   		puts "The following letters are floating to the left of the image:"; puts
@@ -124,6 +125,7 @@ class RedRoom < PuzzleRoom
     
   def prompt
     puts "Go ahead - have a guess!"
+    puts
 	  print "> "
     current_guess = gets.chomp.downcase
   end

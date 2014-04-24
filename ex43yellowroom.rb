@@ -97,6 +97,7 @@ class YellowRoom < PuzzleRoom
   end
   
   def puzzle_intro_description
+    puts
     puts "You now see one ginormous CRT monitor floating in front of you."
     puts "It is glowing a #{BRIGHTNESS_MAPPING[brightness]} #{color}."
     puts "It is blank at first, then words start to appear on it."
@@ -123,14 +124,16 @@ class YellowRoom < PuzzleRoom
         return "lose", "incomplete"
       end
     else
-      puts "OK, see you later."; puts
+      puts "OK, see you later."
+      puts
       return "no_play"
     end
   end
   
   def play
     start_fresh_game
-    puts; puts "Remember, Case Counts!"
+    puts
+    puts "Remember, Case Counts!"
     lists = [STAR_WARS_CHARS, SUPERHEROES, AUTHORS, FILMS, BANDS, CITIES]
     hints = ["A Galaxy Far, Far Away", "Up, Up And Away!", "They Penned The Classics.", "No Rotten Tomatoes Here!", 
               "These Guys Didn't Just Roll, They ___ed!", "The 10 Largest In The Country"]
@@ -139,7 +142,9 @@ class YellowRoom < PuzzleRoom
       puts "You already finished that category!  Try a new one!"
       @current_list = lists[which_list?]
     end
-    puts "Hint:"; puts hints[lists.index(@current_list)]
+    puts
+    puts "Hint:"
+    puts hints[lists.index(@current_list)]
     final_score = go_through_list
     if final_score >= brightness + 6
       puts "Nice job! #{final_score} out of 10! You won that category!"
@@ -152,24 +157,31 @@ class YellowRoom < PuzzleRoom
   end
 
   def go_through_list
+    question_number = 1
     @current_list.each do | question, answer |
-      ask_question(question, answer)
+      ask_question(question, answer, question_number)
+      question_number += 1
     end
     @score
   end
   
-  def ask_question(question, answer)
+  def ask_question(question, answer, question_number)
     (0..1).each do |i|
-      puts; puts "Rewrite."
+      puts
+      puts question_number.to_s + ") Rewrite."
       puts question
+      puts
       if prompt == answer
+        puts
         puts "Well done!"
         @score += 1
         return         
       else
+        puts
         puts "Not quite. Sorry."
         if i == 0
-          puts; puts "Here's another hint:"
+          puts
+          puts "Here's another hint:"
           puts answer.gsub(/[a-z]/, "_")
         end
       end
@@ -177,7 +189,9 @@ class YellowRoom < PuzzleRoom
   end
     
   def which_list?
+    puts
     puts "Pick a number from 1 to 6!"
+    puts
     number = prompt
       while number !~ /[1-6]/
         puts "No, from the other 1 to 6!"
