@@ -10,20 +10,27 @@ In addition, the four puzzles that exist so far are also collected in the "ex43p
 
 hangman.rb was extensively refactored thanks to Anshul's suggestions.  If you want to cheat, uncomment lines 70 and 71.
 
-memory.rb is probably way too hard right now - the plan is to scale it down to a 4x4 game (I wanted themes of sixes for each puzzle but will probably not stick to that at this point).  For now if you want to play it with a cheat, uncomment line 59.
+memory.rb is probably way too hard for the main game and has been scaled down to a 4x4 game for the main game, but I left this version at 6x6 as it is standalone.  I originally wanted themes of sixes for each puzzle but will probably not stick to that at this point).  If you want to cheat, uncomment line 59.
 
-anagrams.rb is definitely way too hard and I still have to write hints for every question.  They are going to be of the form H__ S___ for example, where the answer is Han Solo.  I need to look into working with regular expressions to create H__ S____ from Han Solo, for example.  For now it's probably way too much to figure out unless you are a total anagam head, and I want the puzzles to be more accessible than that.
+anagrams.rb is pretty hard, but there are now hints for every question thanks to my better understanding of regular expressions, and you have 6 categories of which you only have to solve 3 total.
 
-friendlydragon.rb is not complete, but if you play it for a little bit you can get the general feel of it.  It hasn't been integrated into the overall game yet either.
+friendlydragon.rb is now complete, but needs to be integrated into the overall game.
 
+So the most recent updates are as follows:
+
+- Extensive refactoring of ex43orangeroom.rb, which contains the memory game, to both improve the code in general and allow for a 4x4 grid instead of 6x6.
+- Finished friendlydragon.rb as a standalone only (need to integrate it into ex43greenroom.rb).
+- Sorted out the hints for anagrams.rb and integrated them into the ex43yellowroom.rb code as well
+- I also looked at the spacing of the game's text in general, which was getting pretty crowded to read as you played, and added a bunch of "puts" lines to the following files: ex43redroom.rb, ex43orangeroom.rb, ex43yellowroom.rb, ex43puzzleroom.rb, and ex43engine.rb, to give the text more "breathing room" as you play.  This is just the beginning of this particular aspect of the game design, but I wanted to get started on it.
 
 So the current tasks for the overall game are:
 
-1) Finish and Integrate friendlydragon.rb
-2) Write the hints for anagrams.rb
-3) Write and integrate battleships.rb (3x3 grid, two ships)
-4) Write and integrate tictactoe.rb (non AI, program plays poorly enough that a win is required from the player)
-5) Write a boss battle! (six questions whose answers include the six colors)
-6) Code the ending including integrating the boss battle, to be triggered when each room has 3 wins
+1) Integrate the friendlydragon.rb code into ex43greenroom.rb.
+2) Write battleships.rb (3x3 grid, two ships).  DO NOT move on until the code is finished as a standalone game!  (Learned that from anagrams/ex43yellowroom.)
+3) Integrate the battleships.rb code into ex43blueroom.rb.
+4) Write tictactoe.rb (non AI, program plays poorly enough that a win is required from the player).  DO NOT move on until the code is finished as a standalone game!
+5) Write a boss battle standalone (six questions whose answers include the six colors of the game, without the player knowing)!
+6) Code the ending framework including integrating the boss battle, to be triggered when each room has 3 wins.
+7) Clean up the code and test it extensively (two ongoing projects).
 
 That's it for now....
