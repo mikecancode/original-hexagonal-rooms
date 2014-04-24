@@ -103,6 +103,8 @@ class YellowRoom < PuzzleRoom
     puts "It is blank at first, then words start to appear on it."
     puts "This is what you see on the monitor:"
     puts
+    puts "Do you want to play?"
+
   end
 
   def play_a_round?(response)

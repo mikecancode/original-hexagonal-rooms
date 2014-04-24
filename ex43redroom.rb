@@ -50,6 +50,7 @@ class RedRoom < PuzzleRoom
     puts "To the left of the huge monitors appears a smaller monitor.  It is blank."
     puts "This is what you see on the monitors:"
     puts
+    puts "Do you want to play?"    
   end
 
   def play_a_round?(response)

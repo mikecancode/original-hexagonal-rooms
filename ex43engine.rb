@@ -107,7 +107,6 @@ class Engine
     if play_response == "y"
       if room.brightness <= 2
         room.puzzle_intro_description
-        puts "Do you want to play?"
         round_result = room.play_a_round?(prompt)
         if round_result[0] == "win"
           go_to_hub(room, round_result[1])

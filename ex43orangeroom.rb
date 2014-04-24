@@ -66,8 +66,9 @@ class OrangeRoom < PuzzleRoom
     puts "In addition, there are 16 even smaller monitors around the perimeter."
     puts "They have the letters a-d and the numbers 1-4 on them."
     puts "Below the array is another monitor."
-    puts "On it you see the following:"
+    puts "It only has one message:"
     puts
+    puts "Do you want to play?"    
   end
 
   def play_a_round?(response)
