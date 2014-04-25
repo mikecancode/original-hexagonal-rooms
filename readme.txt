@@ -14,16 +14,24 @@ memory.rb is probably way too hard for the main game and has been scaled down to
 
 anagrams.rb is pretty hard, but there are now hints for every question thanks to my better understanding of regular expressions, and you have 6 categories of which you only have to solve 3 total.
 
-friendlydragon.rb is now complete, although it has not been absolutely rigorously tested (there are a lot of branches to test still).
+friendlydragon.rb is now complete, including a rigorous testing of every branch of the "adventure".
+
+I also discovered a few kinks in the overall engine/hubroom/puzzleroom structure that I ironed out; the solutions work, though I think they will need refactoring.
 
 So the most recent updates are as follows:
 
+(4/24/14)
+- Tested friendlydragon.rb and made the appropriate fixes
+- Added shortcut functionality for choosing colors and directions - "r" now translates to "red," "f" to "forward," etc.
+- Made adjustments to allow the door to the hubroom to stay open from the view of a color room if the color's puzzles solved, and to allow for entry to the hubroom.
+
+(4/23/14)
 - Extensive refactoring of ex43orangeroom.rb, which contains the memory game, to both improve the code in general and allow for a 4x4 grid instead of 6x6.
 - Finished friendlydragon.rb and integrated it into the ex43greenroom.rb code.
 - Sorted out the hints for anagrams.rb and integrated them into the ex43yellowroom.rb code as well.
 - I also looked at the spacing of the game's text in general, which was getting pretty crowded to read as you played, and added a bunch of "puts" lines to the following files: ex43redroom.rb, ex43orangeroom.rb, ex43yellowroom.rb, ex43puzzleroom.rb, and ex43engine.rb, to give the text more "breathing room" as you play.  This is just the beginning of this particular aspect of the game design, but I wanted to get started on it and I think it makes play a lot less frustrating.
 
-So the current tasks for the overall game are:
+The current next set of tasks for the overall game remains the same as yesterday:
 
 1) Write battleships.rb (3x3 grid, two ships).  DO NOT move on until the code is finished as a standalone game!  (Learned that from anagrams/ex43yellowroom.)
 2) Integrate the battleships.rb code into ex43blueroom.rb.
