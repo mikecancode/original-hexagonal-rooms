@@ -23,28 +23,28 @@ class FriendlyDragon
                           [ [ "shout \"Oh come on, Montresor!\"",
                               "A brick slides out, and then another, until there's a big enough hole to fit through.\nYou can now see a creepy guy with a trowel." ],
                             [ "look for a nearby pole and vault over the wall",
-                              "You're in luck!  There's a long stick right next to the wall.\nOnly one problem.  Ypu can't pole vault.  You smack into the wall." ],
+                              "You're in luck!  There's a long stick right next to the wall.\nOnly one problem.  You can't pole vault.  You smack into the wall." ],
                             [ "look for a foothold and start using those rock climbing skills?",
-                              "You give it a try.  Wait a minute, what rock climbing skills?  You fall down over and over until you can't stand it anymore." ]
+                              "You give it a try.  Wait a minute, what rock climbing skills?\nYou fall down over and over until you can't stand it anymore." ]
                           ],
                           [ [ "carefully and slowly make your way across the bridge, making sure to disturb it as little as possible",
                               "Of course you do!  It's the only sensible choice.\nYou make it across to the other side just fine."],
                             [ "take a deep breath and sprint across the bridge as fast as you can",
                               "Nice try, genius.  You break one of the slats in the bridge almost instantly.\nAnd turn around and run right back where you came from." ],
                             [ "step to the side of the ladder, take out a bunch of gold and throw it into the abyss",
-                              "Who do you think you are, Indiana Jones?  Way to lose a bunch of gold into an abyss.\nYou think the bridge could have been your move?" ]
+                              "Who do you think you are, Indiana Jones?  Way to lose a bunch of gold into an abyss.\nMaybe, um, using the bridge would have worked!" ]
                           ],
                           [ [ "press yourself to the side of the left wall of the tunnel",
                               "This sort of wimpy response seems to work!  Something whooshy comes whooshing past.\nBest not to worry about what it was." ],
                             [ "duck and roll forward as quickly as possible",
-                              "Seems like a good strategy.  But isn't.  \n You roll right into a pile of nasty slime.  Time to go clean up." ],
+                              "Seems like a good strategy.  But isn't.\nYou roll right into a pile of nasty slime.  Time to go clean up." ],
                             [ "press yourself to the side of the right wall of the tunnel",
                               "Oh man you picked the wrong pressing side.\nYou get severely slimed by a ghostie-type thing.  Time to go clean up." ]
                           ],
                           [ [ "examine this wall very carefully",
                               "You follow the wall all the way to the edge and notice that it doesn't quite reach the tunnel wall!\nYou can squeeze right through!" ],
                             [ "try to climb this one; after all, you have climbed iron before",
-                              "No dice, dude.  Why do you keep thinking you can climb walls?\nYou have climbed an iron fire escape, not a sheer wall!" ],
+                              "No dice, dude.  Why do you keep thinking you can climb walls?\nYou have climbed an iron fire escape before, not a sheer wall!" ],
                             [ "dig your way underneath the wall with the handy shovel you see nearby",
                               "Good effort for sure, and you dig a sizeable hole.\nOut of which crawls a giant possum.  You turn and run as fast as you can." ]
                           ],
