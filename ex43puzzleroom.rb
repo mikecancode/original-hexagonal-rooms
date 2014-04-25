@@ -28,11 +28,19 @@ class PuzzleRoom
   
   def description_second_half(direction_youre_facing, array_index)
     puzzle_facing_views = ["is a #{BRIGHTNESS_MAPPING[Map.clockwise(self).brightness]} #{Map.clockwise(self).color} glow.",
-                          "is a tightly sealed and locked door.\nIt doesn't look like you're going back through it anytime soon.",
+                          "is #{inward_description}",
                           "is a #{BRIGHTNESS_MAPPING[Map.counterclockwise(self).brightness]} #{Map.counterclockwise(self).color} glow.",
                           "\b, you can just make out a bunch of machinery.  It is glowing #{BRIGHTNESS_MAPPING[@brightness]} #{color}."
                           ]
     puzzle_facing_views[(objective_direction_index?(direction_youre_facing) + array_index).modulo(4)]
+  end
+  
+  def inward_description
+    if brightness <= 2
+      "a tightly sealed and locked door.\nIt doesn't look like you're going back through it anytime soon."
+    else
+      "a huge door that was until recently tightly locked, but now hangs wide open."
+    end
   end
   
   def objective_direction_index?(direction)

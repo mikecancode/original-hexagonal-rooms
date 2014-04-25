@@ -16,6 +16,15 @@ class Engine
 		response = gets.chomp.downcase
 	end
 
+  def allow_first_character(input, array)
+    array.each do | element |
+      if input == element[0,1] or input == element
+        return element
+      end
+    end
+    input
+  end
+  
 	def start
     puts
 		puts "You wake up in a dimly lit area.  Your head hurts."
@@ -28,7 +37,8 @@ class Engine
     indicator = true
     while indicator
       puts "Which color do you head towards?"
-      room = Map.to_room(prompt)
+#      room = Map.to_room("green")
+      room = Map.to_room(allow_first_character(prompt, ["red", "orange", "yellow", "green", "blue", "purple"]))
       if !room
         puts "Please try an actual color!"
       elsif room.brightness == 3
@@ -49,7 +59,7 @@ class Engine
 	  puts "It doesn't look like you're going back through it anytime soon."
 	  runner(room, "puzzle")
   end
-  
+    
 	def runner(room, direction)		
 		while room != HubRoom.new
       room, direction = play(room, direction)
@@ -67,12 +77,13 @@ class Engine
 
   def which_way?
     puts "Which way do you want to go?  Left, right, forward, or back?"
-    direction = check_legit_direction(prompt)
+#    direction = "forward"
+    direction = check_legit_direction(allow_first_character(prompt, ["left", "right", "forward", "back"]))
     puts
     puts "Ok, you go #{direction}."
     direction
   end
-  
+    
 	def check_legit_direction(direction)
     subjective_directions = ["left", "right", "forward", "back"]
     while !subjective_directions.include? direction
@@ -103,10 +114,12 @@ class Engine
   def play_puzzle(room)
     room.machinery_description
     puts "Do you stay and watch to see what happens?"
+#    play_response = "y"    
     play_response = prompt
     if play_response == "y"
       if room.brightness <= 2
         room.puzzle_intro_description
+#        round_result = room.play_a_round?("y")
         round_result = room.play_a_round?(prompt)
         if round_result[0] == "win"
           go_to_hub(room, round_result[1])
@@ -125,7 +138,9 @@ class Engine
   end	
     
   def go_to_hub(room, status)
-    room.increase_brightness
+    if room.brightness <= 2
+      room.increase_brightness
+    end
     win_room = room
     room = Map.hub
     room.entrance(win_room)
@@ -134,13 +149,19 @@ class Engine
   end
     
   def inward(room)
-    puts
-    puts "You size up this crazy door.  Maybe there's some way to open it after all? Try a magical password, maybe?"
-    password = prompt
-    puts
-    puts "Nope, #{password} definitely isn't it."
-    puts "You turn around."
-    room
+    if room.brightness <= 2
+      puts
+      puts "You size up this crazy door.  Maybe there's some way to open it after all? Try a magical password, maybe?"
+      password = prompt
+      puts
+      puts "Nope, \"#{password}\" definitely isn't it."
+      puts "You turn around."
+      room
+    else
+      puts
+      puts "You head past the huge now-open door and step through the doorway."
+      go_to_hub(room, nil)
+    end
   end  
   
   def check_orientation(direction)

@@ -9,27 +9,35 @@ class HubRoom
   end
   
 	def entrance(win_room)
-    print all_brightnesses; puts; puts
-		puts "There is a blinding flash of #{win_room.color} light behind you."
-		puts "You turn around."
-		puts "The heavily locked door swings open and you get sucked through the opening."
-    if all_levels_completed?
-      puts "You look around."
-      puts "All the doors are open and a rainbow of blinding color is pouring into the room."
-      boss_round
-    elsif last_level_completed?(win_room)
-      puts "The door you just came from creaks a bit, but it doesn't close behind you this time."
-      puts "You definitely remember this room.  It's brighter now.  Not all of the doors are shut."
-      puts "You see:"
-      show_room_brightnesses(win_room)
-    elsif any_other_level_completed?
-      puts "The door slams shut behind you."
-      puts "You definitely remember this room.  It's brighter now.  Not all of the doors are shut."
-      puts "You see:"
-      show_room_brightnesses(win_room)
+    print all_brightnesses
+    puts
+    puts
+    if win_room.brightness <= 2
+		  puts "There is a blinding flash of #{win_room.color} light behind you."
+		  puts "You turn around."
+		  puts "The heavily locked door swings open and you get sucked through the opening."
+      if all_levels_completed?
+        puts "You look around."
+        puts "All the doors are open and a rainbow of blinding color is pouring into the room."
+        boss_round
+      elsif last_level_completed?(win_room)
+        puts "The door you just came from creaks a bit, but it doesn't close behind you this time."
+        puts "You definitely remember this room.  It's brighter now.  Not all of the doors are shut."
+        puts "You see:"
+        show_room_brightnesses(win_room)
+      elsif any_other_level_completed?
+        puts "The door slams shut behind you."
+        puts "You definitely remember this room.  It's brighter now.  Not all of the doors are shut."
+        puts "You see:"
+        show_room_brightnesses(win_room)
+      else
+        puts "The door slams shut behind you.  It's pretty dim all of a sudden."
+		    puts "You kind of recognize this room.  It has 6 colored glows in it."
+        show_room_brightnesses(win_room)
+      end
     else
-      puts "The door slams shut behind you.  It's pretty dim all of a sudden."
-		  puts "You kind of recognize this room.  It has 6 colored glows in it."
+      puts "You step out of the #{win_room.color} light into a familiar room."
+      puts "You definitely remember this room.  It's brighter now.  Not all of the doors are shut."
       show_room_brightnesses(win_room)
     end
 	end
