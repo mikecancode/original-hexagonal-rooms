@@ -6,7 +6,7 @@ This project came out of an exercise in Learn Ruby The Hard Way.  I am learning 
 
 To run it, collect all ten .rb files from the main directory into one directory, and type "ruby ex43engine.rb."  At the moment it is incomplete so it will crash if you try to visit certain parts of the blue and purple rooms, and does not have an ending.  The red, orange, yellow, and green rooms do have puzzles to play, however, and navigation throughout all rooms is doable.
 
-In addition, the four puzzles that exist so far are also collected in the "ex43puzzles folder."  Each of those puzzles run on their own and only need the one file to make a complete game.
+In addition, the five puzzles that exist so far are also collected in the "ex43puzzles folder."  Each of those puzzles run on their own and only need the one file to make a complete game.
 
 hangman.rb was extensively refactored thanks to Anshul's suggestions.  If you want to cheat, uncomment lines 70 and 71.
 
@@ -16,9 +16,15 @@ anagrams.rb is pretty hard, but there are now hints for every question thanks to
 
 friendlydragon.rb is now complete, including a rigorous testing of every branch of the "adventure".
 
+battleships.rb is in the beginning stages.  I did some early refactoring which is included in the file battleship_refactor_museum.txt just for posterity's sake.
+
 I also discovered a few kinks in the overall engine/hubroom/puzzleroom structure that I ironed out; the solutions work, though I think they will need refactoring.
 
 So the most recent updates are as follows:
+
+(4/25/14)
+
+- Began battleships.rb standalone and saved the early refactoring.
 
 (4/24/14)
 - Tested friendlydragon.rb and made the appropriate fixes
@@ -33,7 +39,7 @@ So the most recent updates are as follows:
 
 The current next set of tasks for the overall game remains the same as yesterday:
 
-1) Write battleships.rb (3x3 grid, two ships).  DO NOT move on until the code is finished as a standalone game!  (Learned that from anagrams/ex43yellowroom.)
+1) Continue battleships.rb.  DO NOT move on until the code is finished as a standalone game!  (Learned that from anagrams/ex43yellowroom.)
 2) Integrate the battleships.rb code into ex43blueroom.rb.
 3) Write tictactoe.rb (non AI, program plays poorly enough that a win is required from the player).  DO NOT move on until the code is finished as a standalone game!
 4) Write a boss battle standalone (six questions whose answers include the six colors of the game, without the player knowing)!
