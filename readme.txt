@@ -17,13 +17,14 @@ anagrams.rb is pretty hard, but there are now hints for every question thanks to
 friendlydragon.rb is now complete, including a rigorous testing of every branch of the "adventure".
 
 battleships.rb is in the beginning stages.  I did some early refactoring which is included in the file battleship_refactor_museum.txt just for posterity's sake.
+Update: battleships.rb is very close to playable.  It needs more testing and will need more refactoring.
 
 I also discovered a few kinks in the overall engine/hubroom/puzzleroom structure that I ironed out; the solutions work, though I think they will need refactoring.
 
 So the most recent updates are as follows:
 
 (4/25/14)
-
+- Further work on battleships.rb - it is not complete but mostly runs.  It needs much more testing and bug-fixing, and then will need much more refactoring.
 - Began battleships.rb standalone and saved the early refactoring.
 
 (4/24/14)
