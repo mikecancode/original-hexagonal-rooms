@@ -33,8 +33,8 @@ class Battleships
   end 
 
   def place_big_ship
-    coordinate_1, coordinate_2, orientation = rand(3), rand(3), rand(2)
-    coordinate_3 = (coordinate_1 + 1).modulo(3)
+    coordinate_1, coordinate_2, orientation = rand(2), rand(3), rand(2)
+    coordinate_3 = coordinate_1 + 1
     if orientation == 0
       @big_ship = [[coordinate_1, coordinate_2], [coordinate_3, coordinate_2]]
     else
@@ -75,12 +75,10 @@ class Battleships
   def play
     setup_round
     while @wins.length < 4
-      cheat
-      show_board(@winning_board)
+#      cheat
       show_board(@players_board)
       guess = any_errors?(take_and_check_guess)
       result = hit_or_miss(translate(guess))
-      show_board(@winning_board)
       show_board(@players_board)
       if @wins.length < 4
         if !go_again?
