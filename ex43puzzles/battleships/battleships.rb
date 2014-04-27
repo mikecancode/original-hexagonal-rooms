@@ -18,6 +18,20 @@ class Battleships
     @winning_board = Array.new(3) { Array.new(3, nil) }
   end
     
+  def add_dashes(board)
+    (0..2).each do |i|
+      (0..2).each do |j|
+        board[i][j] = "-"
+      end
+    end
+  end
+    
+  def prep_boards_for_start
+    [@players_board, @winning_board].each do |board|
+      add_dashes(board)
+    end
+  end 
+
   def place_big_ship
     coordinate_1, coordinate_2, orientation = rand(3), rand(3), rand(2)
     coordinate_3 = (coordinate_1 + 1).modulo(3)
@@ -35,14 +49,6 @@ class Battleships
       @little_ship = [coordinate_4, coordinate_5]
     end
   end
-  
-  def add_dashes(board)
-    (0..2).each do |i|
-      (0..2).each do |j|
-        @players_board[i][j] = "-"
-      end
-    end
-  end
 
   def create_winning_board
     (0..1).each do |i|
@@ -56,10 +62,7 @@ class Battleships
   def setup_round
     @wins = ["seed"]
     init_boards
-    [@big_ship, @little_ship].each do |board|
-      add_dashes(board)
-    end
-    create_players_board
+    prep_boards_for_start
     place_big_ship
     place_little_ship
     create_winning_board
@@ -87,6 +90,7 @@ class Battleships
       end
     end
     puts "Nice job! YOU WIN!"
+    puts
   end
 
   def take_and_check_guess
@@ -124,17 +128,19 @@ class Battleships
   end
 
   def hit_or_miss(guess)
-    print [guess[0], guess[1]]
     if [guess[0], guess[1]] == @big_ship[0] or [guess[0], guess[1]] == @big_ship[1]
+      puts
       puts "Congratulations!  You've scored a hit on the Big Ship!"
-      if @wins.include?(@big_ship[0]) or @wins.include?(@big_ship[1])
-        add_to_wins(guess, "big")
+      add_to_wins(guess, "big")
+      if @wins.include?(@big_ship[0]) and @wins.include?(@big_ship[1])
         puts "Congratulations! You've sunk the Big Ship!"
       end
     elsif [guess[0], guess[1]] == @little_ship
+      puts
       puts "Congratulations! You've sunk the Little Ship!"
       add_to_wins(guess, "little")
     else
+      puts
       puts "Sorry, that shot was a miss."
       return
     end
@@ -148,9 +154,7 @@ class Battleships
       @players_board[guess[0]][guess[1]] = "*"
     end
   end
-  
-  
-  
+    
   def show_board(board)
     puts
     letterline
@@ -184,9 +188,9 @@ class Battleships
   end
     
   def go_again?
-    puts "Would you like to fire another shot?"
+    puts "Would you like to fire another shot? (y/n)"
     if prompt != "y"
-      puts "Would you like to quit?"
+      puts "Would you like to quit? (y/n)"
       if prompt == "y"
         return false
       end
