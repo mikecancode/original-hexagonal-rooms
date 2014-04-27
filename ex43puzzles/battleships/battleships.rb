@@ -3,7 +3,9 @@ class Battleships
   @players_board = []
   @big_ship = []
   @little_ship = []
-  @wins = [] 
+  @winning_board = []
+  @wins = []
+  @ships_found = false
   
   def prompt
     puts
@@ -11,8 +13,9 @@ class Battleships
     response = gets.chomp.downcase
   end
   
-  def init_players_board
-    @players_board = Array.new(3) { Array.new(3, "-") }
+  def init_boards
+    @players_board = Array.new(3) { Array.new(3, nil) }
+    @winning_board = Array.new(3) { Array.new(3, nil) }
   end
     
   def place_big_ship
@@ -33,25 +36,51 @@ class Battleships
     end
   end
   
+  def add_dashes(board)
+    (0..2).each do |i|
+      (0..2).each do |j|
+        @players_board[i][j] = "-"
+      end
+    end
+  end
+
+  def create_winning_board
+    (0..1).each do |i|
+      marker_1, marker_2 = @big_ship[i]
+      @winning_board[marker_1][marker_2] = "@"
+    end
+    marker_1, marker_2 = @little_ship
+    @winning_board[marker_1][marker_2] = "*"
+  end
+
+  def setup_round
+    @wins = ["seed"]
+    init_boards
+    [@big_ship, @little_ship].each do |board|
+      add_dashes(board)
+    end
+    create_players_board
+    place_big_ship
+    place_little_ship
+    create_winning_board
+  end
+  
   def cheat
-    print @big_ship; puts
-    print @little_ship; puts
+    print "big ship: "; print @big_ship; print ";  little ship: "; print @little_ship; puts
   end
   
   def play
-    @wins = ["seed"]
-    init_players_board
-    place_big_ship
-    place_little_ship
-    @ships_found = false
+    setup_round
     while @wins.length < 4
       cheat
-      show_board
+      show_board(@winning_board)
+      show_board(@players_board)
       guess = any_errors?(take_and_check_guess)
       result = hit_or_miss(translate(guess))
-      show_board
+      show_board(@winning_board)
+      show_board(@players_board)
       if @wins.length < 4
-        if go_again? != "y"
+        if !go_again?
           puts "OK, see you later."
           return
         end
@@ -99,7 +128,7 @@ class Battleships
     if [guess[0], guess[1]] == @big_ship[0] or [guess[0], guess[1]] == @big_ship[1]
       puts "Congratulations!  You've scored a hit on the Big Ship!"
       if @wins.include?(@big_ship[0]) or @wins.include?(@big_ship[1])
-        add_to_wins(guess, "big", )
+        add_to_wins(guess, "big")
         puts "Congratulations! You've sunk the Big Ship!"
       end
     elsif [guess[0], guess[1]] == @little_ship
@@ -120,7 +149,9 @@ class Battleships
     end
   end
   
-  def show_board
+  
+  
+  def show_board(board)
     puts
     letterline
     3.times{puts}
@@ -128,7 +159,7 @@ class Battleships
       print "      "
       numbercolumn(i)
       (0..2).each do |j|
-        print @players_board[i][j]
+        print board[i][j]
         print "      "
       end
       numbercolumn(i)
@@ -154,7 +185,13 @@ class Battleships
     
   def go_again?
     puts "Would you like to fire another shot?"
-    response = prompt
+    if prompt != "y"
+      puts "Would you like to quit?"
+      if prompt == "y"
+        return false
+      end
+    end
+    true
   end
   
 end
