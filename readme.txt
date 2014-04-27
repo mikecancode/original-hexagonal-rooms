@@ -16,12 +16,15 @@ anagrams.rb is pretty hard, but there are now hints for every question thanks to
 
 friendlydragon.rb is now complete, including a rigorous testing of every branch of the "adventure".
 
-battleships.rb is in the beginning stages.  I did some early refactoring which is included in the file battleship_refactor_museum.txt just for posterity's sake.
-Update: battleships.rb is very close to playable.  It needs more testing and will need more refactoring.
+battleships.rb is now in the initial finished stage - it is playable with one minor bug (does not check incorrect guesses correctly), and will need a lot of refactoring.  I changed battleship_refactor_museum.txt to a .rb file on Anshul's suggestion as it is in Ruby, and added battleships_coding_notes.txt as well, which is my own observations in English on what I'm learning during coding this particular game.
 
-I also discovered a few kinks in the overall engine/hubroom/puzzleroom structure that I ironed out; the solutions work, though I think they will need refactoring.
+(Note: Battleships is actually the easiest game by far.  I'm thinking of adding a constraint on the number of turns - maybe the user gets 7, then 6, then 5 guesses for each round.  Something like that.  As it is it takes almost no time to play it and win.  On the other hand, maybe the user might need a puzzle like this one!)
 
 So the most recent updates are as follows:
+
+(4/26/14)
+- Battleships made playable with at least one minor bug.  Need to fix the bug and test a bit more, then ready for more refactoring.
+- Documentation and file management.
 
 (4/25/14)
 - Further work on battleships.rb - it is not complete but mostly runs.  It needs much more testing and bug-fixing, and then will need much more refactoring.
