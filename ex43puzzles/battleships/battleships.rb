@@ -74,13 +74,20 @@ class Battleships
   
   def play
     setup_round
+    tries = 0
     while @wins.length < 4
 #      cheat
+      tries += 1
       show_board(@players_board)
-      guess = any_errors?(take_and_check_guess)
+      guess = any_errors?(take_and_check_guess(tries))
       result = hit_or_miss(translate(guess))
       show_board(@players_board)
       if @wins.length < 4
+        if tries == 7
+          puts "Sorry, you've exceeded your guess limit."
+          puts "Please try again later."
+          return
+        end
         if !go_again?
           puts "OK, see you later."
           return
@@ -91,11 +98,12 @@ class Battleships
     puts
   end
 
-  def take_and_check_guess
+  def take_and_check_guess(tries)
     puts "There are two ships out there in the ocean."
     puts "One of length 2, one of length 1."
-    puts "See if you can find them."
+    puts "See if you can find them in 7 tries or less."
     puts "Have a guess (like a1, b3, etc.)!"
+    puts "Try Number #{tries}:"
     guess = prompt
   end
 
@@ -105,7 +113,7 @@ class Battleships
   end
 
   def guess_kosher?(guess)
-    while guess.length != 2 or !( ["a", "b", "c"].include? guess[0]) and ( ["1", "2", "3"].include? guess[1] )
+    while guess.length != 2 or !( ["a", "b", "c"].include? guess[0] and ["1", "2", "3"].include? guess[1] )
       puts "Please try again and type a legitimate guess."
       guess = prompt
     end
