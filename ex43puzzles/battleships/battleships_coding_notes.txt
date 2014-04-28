@@ -1,0 +1,23 @@
+notes/ thoughts:
+
+1: So how about that @winning_board = @players_board thing, huh?  Looks like once you set a "route" with an instance variable, it stays that way until you change it.
+ Makes sense.  Variables have scope.  So the scope of the instance variable is the instance of the class.  But I guess extra weird is this idea of one variable 
+ changing and then affecting the other "in reverse" - so after I set @winning_board = @players_board, changes to the former got made to the latter.  It's all in
+ constant motion, behind the scenes, much more than I have realized.
+
+2: I'm definitely starting to want to "automate" as much as possible.  I am getting to the point where doing anything twice makes me want to look for a new way to 
+look at it.  I think this is good just from a problem solving perspective.  I'm sure Anshul will have many other reasons why it's good.  A good case in point, 
+though, would be the add_dashes function I just wrote.  All I have to do is use it twice on two different arrays.  But even that seems too repetitive.  Shouldn't 
+there be a way to use a function twice in a row, in one line of code?  Gonna look this up.
+
+...and duh!  The answer is simple - just toss the two arrays into a third array and pass each element to the function.  Nice!
+
+More importantly, I learned a bunch more things about methods and their capabilities that will be super useful down the road....
+
+3: After cleaning up the code to the point of at least running correctly, I had one last thing to deal with before beginning refactoring.  The battleship field
+is a torus!  Or at least as far as initializing the battleship positions it is - the big ship was being built using modulo three which caused it to sometimes 
+"wrap around" the ocean!  OK, so I could have gone back to a set of ifs and elses but then after looking at it for a while I realized that there was a very
+different solution - this is why I like coding (see above) - that worked much better.  Since there's no difference to the game between the first point and second 
+point created, there's no need to cover the whole board with the first point.  The solution (at least for now) was to limit the scope of the first coordinate of
+the first point - then to add the second point I could always add one.  It's easier at this point just to see the code.  But my point in writing this down is that
+it was the kind of reframing of the question that I really enjoy when it happens.  Even if there's a better solution, finding this one was worth the effort.
