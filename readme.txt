@@ -16,11 +16,15 @@ anagrams.rb is pretty hard, but there are now hints for every question thanks to
 
 friendlydragon.rb is now complete, including a rigorous testing of every branch of the "adventure".
 
-battleships.rb is now in the initial finished stage - it is playable with one minor bug (does not check incorrect guesses correctly), and will need a lot of refactoring.  I changed battleship_refactor_museum.txt to a .rb file on Anshul's suggestion as it is in Ruby, and added battleships_coding_notes.txt as well, which is my own observations in English on what I'm learning during coding this particular game.
+battleships.rb is now in the finishing stages - it is playable and will need a lot of refactoring.  I removed battleships_coding_notes.txt as well, in order to keep comments inside .rb files (except for this readme).  I added the constraint to the standalone that the user has to find the ships in 7 turns - in the full game the user will get 7, then 6, then 5 guesses in each round.
 
-(Note: Battleships is actually the easiest game by far.  I'm thinking of adding a constraint on the number of turns - maybe the user gets 7, then 6, then 5 guesses for each round.  Something like that.  As it is it takes almost no time to play it and win.  On the other hand, maybe the user might need a puzzle like this one!)
 
 So the most recent updates are as follows:
+
+(4/27/14)
+- Battleships minor bug fixed.  Fully playable now as a standalone.
+- Added constraint on number of guesses to battleships.
+- Began refactoring battleships.
 
 (4/26/14)
 - Battleships made playable with at least one minor bug.  Need to fix the bug and test a bit more, then ready for more refactoring.
@@ -48,6 +52,8 @@ The current next set of tasks for the overall game remains the same as yesterday
 3) Write tictactoe.rb (non AI, program plays poorly enough that a win is required from the player).  DO NOT move on until the code is finished as a standalone game!
 4) Write a boss battle standalone (six questions whose answers include the six colors of the game, without the player knowing)!
 5) Code the ending framework including integrating the boss battle, to be triggered when each room has 3 wins.
-6) Clean up the code, refactor it and test it extensively (ongoing projects).
+6) Clean up the indenting in all files.
+7) Clean up the code, refactor it and test it extensively (ongoing projects).
+
 
 That's it for now....
