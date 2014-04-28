@@ -1,3 +1,6 @@
+# Two examples of refactoring from the battleships.rb file.  I would like to make this file run and demonstrate what the various bits do
+# at some point, but for now I will keep it as a record.
+
 # Example 1: Initializing the player's board
 
   def init_players_board
@@ -15,7 +18,7 @@
     @players_board = Array.new(3) { Array.new(3, "-") }
   end
 
-#		:)
+#		^maybe a bit better? :)
 
 
 # Example 2: Placing the ships
@@ -42,7 +45,7 @@
       little_ship_vertical, little_ship_horizontal = rand(3), rand(3)
       puts little_ship_vertical, little_ship_horizontal
       @little_ship = [little_ship_vertical, little_ship_horizontal]
-	end  
+	  end  
   end
 
 #	  		Below: An Improvement?
@@ -95,20 +98,20 @@
 #     And below: One fix for the "torus problem" - take out the modulo and restrict
 #     coordinate_1's initial options.  See first two lines of place_big_ship.
 
-def place_big_ship
-  coordinate_1, coordinate_2, orientation = rand(2), rand(3), rand(2)
-  coordinate_3 = coordinate_1 + 1
-  if orientation == 0
-    @big_ship = [[coordinate_1, coordinate_2], [coordinate_3, coordinate_2]]
-  else
-    @big_ship = [[coordinate_2, coordinate_1], [coordinate_2, coordinate_3]]
+  def place_big_ship
+    coordinate_1, coordinate_2, orientation = rand(2), rand(3), rand(2)
+    coordinate_3 = coordinate_1 + 1
+    if orientation == 0
+      @big_ship = [[coordinate_1, coordinate_2], [coordinate_3, coordinate_2]]
+    else
+      @big_ship = [[coordinate_2, coordinate_1], [coordinate_2, coordinate_3]]
+    end
   end
-end
     
-def place_little_ship
-  @little_ship = @big_ship[0]
-  while @big_ship.include? @little_ship      
-    coordinate_4, coordinate_5 = rand(3), rand(3)
-    @little_ship = [coordinate_4, coordinate_5]
+  def place_little_ship
+    @little_ship = @big_ship[0]
+    while @big_ship.include? @little_ship      
+      coordinate_4, coordinate_5 = rand(3), rand(3)
+      @little_ship = [coordinate_4, coordinate_5]
+    end
   end
-end
