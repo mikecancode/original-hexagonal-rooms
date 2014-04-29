@@ -1,5 +1,7 @@
 class Battleships
   
+  BOARD_SIZE = 3
+  
   @players_board = []
   @big_ship = []
   @little_ship = []
@@ -14,11 +16,12 @@ class Battleships
   end
   
   def place_big_ship
-    x, y = rand(2), rand(3)
+    x, y = rand(BOARD_SIZE - 1), rand(BOARD_SIZE)
     if [:horizontal, :vertical].sample == :horizontal
       puts "horizontal"
       @big_ship = [[x, y], [x + 1, y]]
     else
+      puts "vertical"
       @big_ship = [[y, x], [y, x + 1]]
     end
   end
@@ -32,11 +35,11 @@ class Battleships
 
   def create_winning_board
     (0..1).each do |i|
-      marker_1, marker_2 = @big_ship[i]
-      @winning_board[marker_1][marker_2] = "@"
+      a, b = @big_ship[i]
+      @winning_board[a][b] = "@"
     end
-    marker_1, marker_2 = @little_ship[0]
-    @winning_board[marker_1][marker_2] = "*"
+    a, b = @little_ship[0]
+    @winning_board[a][b] = "*"
   end
 
   def setup_round
@@ -87,6 +90,7 @@ class Battleships
     puts "One of length 2, one of length 1."
     puts "See if you can find them in 7 tries or less."
     puts "Have a guess (like a1, b3, etc.)!"
+    puts
     puts "Try Number #{tries}:"
     guess = prompt
   end
@@ -114,7 +118,7 @@ class Battleships
   
   def translate(guess)
     translation = ["a", "b", "c"]
-    guess = [guess[1].to_i - 1, translation.index(guess[0])]
+    guess = [translation.index(guess[0]), guess[1].to_i - 1]
   end
 
   def hit_or_miss(guess)
@@ -125,7 +129,7 @@ class Battleships
       if @wins.include?(@big_ship[0]) and @wins.include?(@big_ship[1])
         puts "Congratulations! You've sunk the Big Ship!"
       end
-    elsif [guess[0], guess[1]] == @little_ship
+    elsif [guess[0], guess[1]] == @little_ship[0]
       puts
       puts "Congratulations! You've sunk the Little Ship!"
       add_to_wins(guess, "little")
@@ -148,38 +152,40 @@ class Battleships
   def show_board(board)
     puts
     letterline
-    3.times{puts}
-    (0..2).each do |i|      
+    BOARD_SIZE.times{puts}
+    (0..BOARD_SIZE-1).each do |j|      
       print "      "
-      numbercolumn(i)
-      (0..2).each do |j|
-        print board[i][j] or print "-"
+      numbercolumn(j)
+      (0..BOARD_SIZE-1).each do |i|
+        print (board[i][BOARD_SIZE-1-j] or "-")
         print "      "
       end
-      numbercolumn(i)
-      3.times{puts}
+      numbercolumn(j)
+      BOARD_SIZE.times{puts}
     end
     letterline
-    3.times{puts}
+    BOARD_SIZE.times{puts}
   end
   
   def letterline
     letters = ["a", "b", "c"]
     print "             "
-    (0..2).each do |i|
+    (0..BOARD_SIZE-1).each do |i|
       print letters[i]
       print "      "
     end
   end
 
   def numbercolumn(i)
-    print i+1
+    print BOARD_SIZE - i
     print "      "
   end
     
   def go_again?
+    puts
     puts "Would you like to fire another shot? (y/n)"
     if prompt != "y"
+      puts
       puts "Would you like to quit? (y/n)"
       if prompt == "y"
         return false
