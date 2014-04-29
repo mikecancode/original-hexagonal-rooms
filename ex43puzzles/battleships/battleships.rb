@@ -26,7 +26,7 @@ class Battleships
     (0..number_of_ships - 1).each do |i|
       ship = Array.new
       ship_size = number_of_ships - i
-      x, y = rand(ship_size - 1), rand(ship_size)
+      x, y = rand(BOARD_SIZE - 1), rand(BOARD_SIZE)
       if [:horizontal, :vertical].sample == :horizontal
         puts "horizontal"
         (0..ship_size - 1).each { |j| ship.push([x + j, y]) }
