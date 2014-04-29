@@ -1,6 +1,7 @@
 class Battleships
   
-  BOARD_SIZE = 3
+  # this constant was added late in this game, to avoid hard-coding all the 2s and 3s that were prevalent.  Now the game can be extended to 4x4, etc. more easily
+  BOARD_SIZE = 3 
   
   @players_board = []
   @big_ship = []
@@ -15,13 +16,12 @@ class Battleships
     response = gets.chomp.downcase
   end
   
+  # horizontal and vertical were a pain to sort out - at this point if the condition is met, the big ship will be horizontal on the board, which is correct
   def place_big_ship
     x, y = rand(BOARD_SIZE - 1), rand(BOARD_SIZE)
     if [:horizontal, :vertical].sample == :horizontal
-      puts "horizontal"
       @big_ship = [[x, y], [x + 1, y]]
     else
-      puts "vertical"
       @big_ship = [[y, x], [y, x + 1]]
     end
   end
@@ -33,6 +33,8 @@ class Battleships
     end
   end
 
+  # next step is to generalize and create @ships which can range in size, rather than just using @little_ship and @big_ship
+  
   def create_winning_board
     (0..1).each do |i|
       a, b = @big_ship[i]
@@ -70,7 +72,7 @@ class Battleships
       result = hit_or_miss(translate(guess))
       show_board(@players_board)
       if @wins.length < 4
-        if tries == 7
+        if tries == 7 # hard coding but I'm leaving it for now; I may have the game range in board size rather than number of tries; we'll see
           puts "Sorry, you've exceeded your guess limit."
           puts "Please try again later."
           return
@@ -116,11 +118,13 @@ class Battleships
     guess
   end
   
+  # at one point the coordinates were backwards and I didn't know why so I just switched them again in guess below; bad idea - everything is as it should be now
   def translate(guess)
     translation = ["a", "b", "c"]
     guess = [translation.index(guess[0]), guess[1].to_i - 1]
   end
 
+  # there will be a lot of iteration once @ships replaces @little_ship and @big_ship, including on sections like this one - but it will be worth it
   def hit_or_miss(guess)
     if [guess[0], guess[1]] == @big_ship[0] or [guess[0], guess[1]] == @big_ship[1]
       puts
@@ -140,6 +144,7 @@ class Battleships
     end
   end
 
+  # same comment as last method
   def add_to_wins(guess, ship_size)
     @wins.push(guess)
     if ship_size == "big"
@@ -149,6 +154,7 @@ class Battleships
     end
   end
     
+  # here's where not hard-coding is already making it easier to generalize the board size, I hope
   def show_board(board)
     puts
     letterline
@@ -167,6 +173,7 @@ class Battleships
     BOARD_SIZE.times{puts}
   end
   
+  # this will be harder to generalize, maybe
   def letterline
     letters = ["a", "b", "c"]
     print "             "
