@@ -14,20 +14,19 @@ class Battleships
   end
   
   def place_big_ship
-    coordinate_1, coordinate_2, orientation = rand(2), rand(3), rand(2)
-    coordinate_3 = coordinate_1 + 1
-    if orientation == 0
-      @big_ship = [[coordinate_1, coordinate_2], [coordinate_3, coordinate_2]]
+    x, y = rand(2), rand(3)
+    if [:horizontal, :vertical].sample == :horizontal
+      puts "horizontal"
+      @big_ship = [[x, y], [x + 1, y]]
     else
-      @big_ship = [[coordinate_2, coordinate_1], [coordinate_2, coordinate_3]]
+      @big_ship = [[y, x], [y, x + 1]]
     end
   end
       
   def place_little_ship
-    @little_ship = @big_ship[0]
-    while @big_ship.include? @little_ship      
-      coordinate_4, coordinate_5 = rand(3), rand(3)
-      @little_ship = [coordinate_4, coordinate_5]
+    @little_ship = nil
+    while !@little_ship or (@big_ship & @little_ship).any?
+      @little_ship = [[rand(3), rand(3)]]
     end
   end
 
@@ -36,7 +35,7 @@ class Battleships
       marker_1, marker_2 = @big_ship[i]
       @winning_board[marker_1][marker_2] = "@"
     end
-    marker_1, marker_2 = @little_ship
+    marker_1, marker_2 = @little_ship[0]
     @winning_board[marker_1][marker_2] = "*"
   end
 
@@ -45,9 +44,9 @@ class Battleships
     @players_board = Array.new(3) { Array.new(3, nil) }
     @winning_board = Array.new(3) { Array.new(3, nil) }
     
-    # I want something like the below but I am definitely missing something conceptually here; that doesn't work
-    # [@players_board, @winning_board].each { |board| send("#{board} =", send(board) Array.new(3) { Array.new(3, nil) } }   
-    
+    # I wrote a lot of code like the line below but didn't realize that it left @players_board and @winning_board untouched
+    # [@players_board, @winning_board].each { |board| board.push(Array.new(3) { Array.new(3, nil) }) }   
+
     place_big_ship
     place_little_ship
     create_winning_board
@@ -61,7 +60,7 @@ class Battleships
     setup_round
     tries = 0
     while @wins.length < 4
-      #      cheat
+      cheat
       tries += 1
       show_board(@players_board)
       guess = any_errors?(take_and_check_guess(tries))
