@@ -13,25 +13,6 @@ class Battleships
     response = gets.chomp.downcase
   end
   
-  def init_boards
-    @players_board = Array.new(3) { Array.new(3, nil) }
-    @winning_board = Array.new(3) { Array.new(3, nil) }
-  end
-    
-  def add_dashes(board)
-    (0..2).each do |i|
-      (0..2).each do |j|
-        board[i][j] = "-"
-      end
-    end
-  end
-    
-  def prep_boards_for_start
-    [@players_board, @winning_board].each do |board|
-      add_dashes(board)
-    end
-  end 
-
   def place_big_ship
     coordinate_1, coordinate_2, orientation = rand(2), rand(3), rand(2)
     coordinate_3 = coordinate_1 + 1
@@ -61,8 +42,10 @@ class Battleships
 
   def setup_round
     @wins = ["seed"]
-    init_boards
-    prep_boards_for_start
+    @players_board = Array.new(3) { Array.new(3, nil) }
+    @winning_board = Array.new(3) { Array.new(3, nil) }
+    # I want something like the below but I am definitely missing something conceptually here; that doesn't work
+    # [@players_board, @winning_board].each { |board| send("#{board} =", send(board) Array.new(3) { Array.new(3, nil) } }   
     place_big_ship
     place_little_ship
     create_winning_board
@@ -76,7 +59,7 @@ class Battleships
     setup_round
     tries = 0
     while @wins.length < 4
-#      cheat
+      #      cheat
       tries += 1
       show_board(@players_board)
       guess = any_errors?(take_and_check_guess(tries))
@@ -169,7 +152,7 @@ class Battleships
       print "      "
       numbercolumn(i)
       (0..2).each do |j|
-        print board[i][j]
+        print board[i][j] or print "-"
         print "      "
       end
       numbercolumn(i)
