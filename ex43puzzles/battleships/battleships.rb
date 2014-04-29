@@ -44,8 +44,10 @@ class Battleships
     @wins = ["seed"]
     @players_board = Array.new(3) { Array.new(3, nil) }
     @winning_board = Array.new(3) { Array.new(3, nil) }
+    
     # I want something like the below but I am definitely missing something conceptually here; that doesn't work
     # [@players_board, @winning_board].each { |board| send("#{board} =", send(board) Array.new(3) { Array.new(3, nil) } }   
+    
     place_big_ship
     place_little_ship
     create_winning_board
