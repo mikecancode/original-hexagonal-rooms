@@ -1,11 +1,11 @@
 class Battleships
   
-  # this constant was added late in this game, to avoid hard-coding all the 2s and 3s that were prevalent.  Now the game can be extended to 4x4, etc. more easily
-  BOARD_SIZE = 3 
+  # Now working to implement one general instance variable called @ships, 
+  # which will allow for any board size and number of ships by just changing the constant below
+  BOARD_SIZE = 3
   
   @players_board = []
-  @big_ship = []
-  @little_ship = []
+  @ships = []
   @winning_board = []
   @wins = []
   @ships_found = false
@@ -16,25 +16,30 @@ class Battleships
     response = gets.chomp.downcase
   end
   
-  # horizontal and vertical were a pain to sort out - at this point if the condition is met, the big ship will be horizontal on the board, which is correct
-  def place_big_ship
-    x, y = rand(BOARD_SIZE - 1), rand(BOARD_SIZE)
-    if [:horizontal, :vertical].sample == :horizontal
-      @big_ship = [[x, y], [x + 1, y]]
-    else
-      @big_ship = [[y, x], [y, x + 1]]
-    end
-  end
-      
-  def place_little_ship
-    @little_ship = nil
-    while !@little_ship or (@big_ship & @little_ship).any?
-      @little_ship = [[rand(3), rand(3)]]
+
+  # This function is the heart of the new @ships version
+  # It currently works - mostly.
+  
+  def place_ships
+    number_of_ships = BOARD_SIZE - 1
+    @ships = Array.new
+    (0..number_of_ships - 1).each do |i|
+      ship = Array.new
+      ship_size = number_of_ships - i
+      x, y = rand(ship_size - 1), rand(ship_size)
+      if [:horizontal, :vertical].sample == :horizontal
+        puts "horizontal"
+        (0..ship_size - 1).each { |j| ship.push([x + j, y]) }
+      else
+        puts "vertical"
+        (0..ship_size - 1).each { |j| ship.push([y, x + j]) }
+      end
+      @ships.push(ship)
     end
   end
 
-  # next step is to generalize and create @ships which can range in size, rather than just using @little_ship and @big_ship
   
+  #old
   def create_winning_board
     (0..1).each do |i|
       a, b = @big_ship[i]
@@ -44,13 +49,12 @@ class Battleships
     @winning_board[a][b] = "*"
   end
 
+  #old
   def setup_round
     @wins = ["seed"]
-    @players_board = Array.new(3) { Array.new(3, nil) }
+    @players_board = Array.new(BOARD_SIZE) { Array.new(3, nil) }
     @winning_board = Array.new(3) { Array.new(3, nil) }
     
-    # I wrote a lot of code like the line below but didn't realize that it left @players_board and @winning_board untouched
-    # [@players_board, @winning_board].each { |board| board.push(Array.new(3) { Array.new(3, nil) }) }   
 
     place_big_ship
     place_little_ship
@@ -61,8 +65,15 @@ class Battleships
     print "big ship: "; print @big_ship; print ";  little ship: "; print @little_ship; puts
   end
   
+
+  # currently running battleships.rb just looks at the ships.  Still working out those kinks.
   def play
-    setup_round
+#    setup_round
+    place_ships
+    print @ships
+    puts
+    puts
+=begin
     tries = 0
     while @wins.length < 4
       cheat
@@ -85,7 +96,10 @@ class Battleships
     end
     puts "Nice job! YOU WIN!"
     puts
+=end
   end
+
+  # everything else below is waiting to be refactored after the place_ships functiion is done
 
   def take_and_check_guess(tries)
     puts "There are two ships out there in the ocean."
