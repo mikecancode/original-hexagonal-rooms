@@ -3,7 +3,7 @@ class Battleships
   # This version of Battleships uses one general instance variable called @ships, 
   # which will allow for any board size up to 8, by changing the value of BOARD_SIZE.
   
-  BOARD_SIZE = 8
+  BOARD_SIZE = 4
   NUMBER_OF_SHIPS = BOARD_SIZE - 1
   
   # Not sure what to do about the fact that there are a finite number of these symbols.
@@ -27,7 +27,7 @@ class Battleships
   @winning_board = []
   @wins = []
   @win_requirement = nil
-  @tries_required = nil
+  @guess_limit = nil
   
   def prompt
     puts
@@ -110,7 +110,7 @@ class Battleships
   
   def set_win_and_tries_requirements
     @win_requirement = (1..NUMBER_OF_SHIPS).reduce(:+)
-    @tries_required = BOARD_SIZE ** 2 / 2
+    @guess_limit = BOARD_SIZE ** 2 / 2
   end
 
   def setup_round
@@ -151,7 +151,7 @@ class Battleships
       result = hit_or_miss(translate(guess))
       show_board(@players_board)
       if @wins.length < @win_requirement
-        if tries == @tries_required
+        if tries == @guess_limit
           puts "Sorry, you've exceeded your guess limit."
           puts "Please try again later."
           return
@@ -169,7 +169,7 @@ class Battleships
   def take_and_check_guess(tries)
     puts "There are #{NUMBER_OF_SHIPS} ships out there in the ocean."
     puts "One of each length from 1 to #{NUMBER_OF_SHIPS}."
-    puts "See if you can find them in #{@tries_required} tries or less."
+    puts "See if you can find them in #{@guess_limit} tries or less."
     puts "Have a guess (like a1, b3, etc.)!"
     puts
     puts "Try Number #{tries}:"
