@@ -1,14 +1,33 @@
 class Battleships
   
-  # Now working to implement one general instance variable called @ships, 
-  # which will allow for any board size and number of ships by just changing the constant below
-  BOARD_SIZE = 3
+  # This version of Battleships uses one general instance variable called @ships, 
+  # which will allow for any board size up to 8, by changing the value of BOARD_SIZE.
+  
+  BOARD_SIZE = 8
+  NUMBER_OF_SHIPS = BOARD_SIZE - 1
+  
+  # Not sure what to do about the fact that there are a finite number of these symbols.
+  # But not sure who would want to play past an 8x8 board with 7 ships, either.
+  
+  SHIP_SYMBOLS =  { 1 => "*",
+                    2 => "@",
+                    3 => "0",
+                    4 => "8",
+                    5 => "%",
+                    6 => "$",
+                    7 => "+"
+                  }
+  
+  # Same issue as above: finite number of letters.  Should this go past 8x8?
+  
+  LETTERS = ["a", "b", "c", "d", "e", "f", "g", "h"]
   
   @players_board = []
   @ships = []
   @winning_board = []
   @wins = []
-  @ships_found = false
+  @win_requirement = nil
+  @tries_required = nil
   
   def prompt
     puts
@@ -16,74 +35,123 @@ class Battleships
     response = gets.chomp.downcase
   end
   
-
-  # This function is the heart of the new @ships version
-  # It currently works - mostly.
+  # This function is the heart of the new @ships version of the game
   
   def place_ships
-    number_of_ships = BOARD_SIZE - 1
     @ships = Array.new
-    (0..number_of_ships - 1).each do |i|
-      ship = Array.new
-      ship_size = number_of_ships - i
-      x, y = rand(BOARD_SIZE - ship_size), rand(BOARD_SIZE)
-      if [:horizontal, :vertical].sample == :horizontal
-        puts "horizontal"
-        (0..ship_size - 1).each { |j| ship.push([x + j, y]) }
-      else
-        puts "vertical"
-        (0..ship_size - 1).each { |j| ship.push([y, x + j]) }
+    (0..NUMBER_OF_SHIPS - 1).each do |i|
+      ship = nil
+      while !ship or ship_overlaps?(ship)
+        ship = Array.new
+        ship_size = NUMBER_OF_SHIPS - i
+        x, y = rand(BOARD_SIZE - ship_size), rand(BOARD_SIZE)
+        if [:horizontal, :vertical].sample == :horizontal
+          puts "horizontal"
+          (0..ship_size - 1).each { |j| ship.push([x + j, y]) }
+        else
+          puts "vertical"
+          (0..ship_size - 1).each { |j| ship.push([y, x + j]) }
+        end        
+        print ship; puts
       end
+#      print ship; puts
       @ships.push(ship)
     end
+#    print @ships; puts    
   end
 
+  # Below is the helper function that checks for overlaps in place_ships
+  # Originally i had:
   
-  #old
-  def create_winning_board
-    (0..1).each do |i|
-      a, b = @big_ship[i]
-      @winning_board[a][b] = "@"
+  # def ship_overlaps?(new_ship)
+  #   @ships.each do |ship|
+  #     ship.each do |square|
+  #       new_ship.each do |new_square|
+  #         if square == new_square
+  #           return true
+  #         end
+  #       end
+  #     end
+  #   end
+  #   false
+  # end
+
+  # Anshul advised me to use & and .empty? instead of iteration
+  # Below is the second version of the helper function
+  # It looked great but does not work!
+  # Basically it compares an array of arrays of arrays to an array of arrays
+  
+  # def ship_overlaps?(new_ship)
+  #   !(@ships & new_ship).empty?
+  # end
+
+  # Below is the third version of the helper function
+  # It does work - compares apples to apples, not the above problem
+  # I'm wondering if it could be refactored to be better
+  
+  def ship_overlaps?(new_ship)
+    @ships.each do |ship|
+      if !(ship & new_ship).empty?
+        return true
+      end
     end
-    a, b = @little_ship[0]
-    @winning_board[a][b] = "*"
+    false
+  end
+  
+  def create_winning_board
+    @ships.each do |ship|
+      ship.each do |coordinates|
+        @winning_board[coordinates[0]][coordinates[1]] = SHIP_SYMBOLS[ship.length]
+      end
+    end
   end
 
-  #old
+  # This was my first use of reduce
+  
+  def set_win_and_tries_requirements
+    @win_requirement = (1..NUMBER_OF_SHIPS).reduce(:+)
+    @tries_required = BOARD_SIZE ** 2 / 2
+  end
+
   def setup_round
     @wins = ["seed"]
-    @players_board = Array.new(BOARD_SIZE) { Array.new(3, nil) }
-    @winning_board = Array.new(3) { Array.new(3, nil) }
-    
 
-    place_big_ship
-    place_little_ship
+    # Need to refactor the following two lines; see IMs with Anshul
+    @players_board = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE, nil) }
+    @winning_board = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE, nil) }
+
+    place_ships
     create_winning_board
+    set_win_and_tries_requirements
   end
   
   def cheat
-    print "big ship: "; print @big_ship; print ";  little ship: "; print @little_ship; puts
+    (0..NUMBER_OF_SHIPS - 1).each do |i|
+      print @ships[i]
+      puts
+    end
   end
-  
 
-  # currently running battleships.rb just looks at the ships.  Still working out those kinks.
+  # Everything above is done for the moment except refactoring creating the nil boards
+  
+  # Everything else below is in the process of being debugged
+  # It runs but the win condition is not met correctly - otherwise seems to work
+  
   def play
-#    setup_round
-    place_ships
-    print @ships
+    setup_round
     puts
     puts
-=begin
     tries = 0
-    while @wins.length < 4
+    while @wins.length < @win_requirement
       cheat
       tries += 1
       show_board(@players_board)
+      show_board(@winning_board)
       guess = any_errors?(take_and_check_guess(tries))
       result = hit_or_miss(translate(guess))
       show_board(@players_board)
-      if @wins.length < 4
-        if tries == 7 # hard coding but I'm leaving it for now; I may have the game range in board size rather than number of tries; we'll see
+      if @wins.length < @win_requirement
+        if tries == @tries_required
           puts "Sorry, you've exceeded your guess limit."
           puts "Please try again later."
           return
@@ -96,15 +164,12 @@ class Battleships
     end
     puts "Nice job! YOU WIN!"
     puts
-=end
   end
 
-  # everything else below is waiting to be refactored after the place_ships functiion is done
-
   def take_and_check_guess(tries)
-    puts "There are two ships out there in the ocean."
-    puts "One of length 2, one of length 1."
-    puts "See if you can find them in 7 tries or less."
+    puts "There are #{NUMBER_OF_SHIPS} ships out there in the ocean."
+    puts "One of each length from 1 to #{NUMBER_OF_SHIPS}."
+    puts "See if you can find them in #{@tries_required} tries or less."
     puts "Have a guess (like a1, b3, etc.)!"
     puts
     puts "Try Number #{tries}:"
@@ -116,8 +181,10 @@ class Battleships
     guess = already_got_right?(guess)
   end
 
+  # My first use of splat below, in the condition
+
   def guess_kosher?(guess)
-    while guess.length != 2 or !( ["a", "b", "c"].include? guess[0] and ["1", "2", "3"].include? guess[1] )
+    while guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].to_s.include? guess[1] )
       puts "Please try again and type a legitimate guess."
       guess = prompt
     end
@@ -132,47 +199,42 @@ class Battleships
     guess
   end
   
-  # at one point the coordinates were backwards and I didn't know why so I just switched them again in guess below; bad idea - everything is as it should be now
   def translate(guess)
-    translation = ["a", "b", "c"]
-    guess = [translation.index(guess[0]), guess[1].to_i - 1]
+    guess = [LETTERS.index(guess[0]), guess[1].to_i - 1]
   end
 
-  # there will be a lot of iteration once @ships replaces @little_ship and @big_ship, including on sections like this one - but it will be worth it
+  # Not sure about ship_size - whether it's necessary or useful
+      
   def hit_or_miss(guess)
-    if [guess[0], guess[1]] == @big_ship[0] or [guess[0], guess[1]] == @big_ship[1]
-      puts
-      puts "Congratulations!  You've scored a hit on the Big Ship!"
-      add_to_wins(guess, "big")
-      if @wins.include?(@big_ship[0]) and @wins.include?(@big_ship[1])
-        puts "Congratulations! You've sunk the Big Ship!"
+    (0..NUMBER_OF_SHIPS - 1).each do |i|
+      ship_size = NUMBER_OF_SHIPS - i
+      ship_size.times do |j|
+        print [guess[0], guess[1]]; puts
+        if [guess[0], guess[1]] == @ships[i][j]
+          puts
+          puts "Congratulations!  You've scored a hit on the #{SHIP_SYMBOLS[ship_size]} ship!"
+          add_to_wins(guess, ship_size)
+          if (@wins & @ships[i]).length == @ships[i].length
+            puts
+            puts "Congratulations!  You've sunk the #{SHIP_SYMBOLS[ship_size]} ship!"
+          end
+          return
+        end
       end
-    elsif [guess[0], guess[1]] == @little_ship[0]
-      puts
-      puts "Congratulations! You've sunk the Little Ship!"
-      add_to_wins(guess, "little")
-    else
-      puts
-      puts "Sorry, that shot was a miss."
-      return
     end
+    puts
+    puts "Sorry, that shot was a miss."    
   end
 
-  # same comment as last method
-  def add_to_wins(guess, ship_size)
+  def add_to_wins(guess, size)
     @wins.push(guess)
-    if ship_size == "big"
-      @players_board[guess[0]][guess[1]] = "@"
-    elsif ship_size == "little"
-      @players_board[guess[0]][guess[1]] = "*"
-    end
+    @players_board[guess[0]][guess[1]] = SHIP_SYMBOLS[size]
   end
     
-  # here's where not hard-coding is already making it easier to generalize the board size, I hope
   def show_board(board)
     puts
     letterline
-    BOARD_SIZE.times{puts}
+    3.times{puts}
     (0..BOARD_SIZE-1).each do |j|      
       print "      "
       numbercolumn(j)
@@ -181,18 +243,16 @@ class Battleships
         print "      "
       end
       numbercolumn(j)
-      BOARD_SIZE.times{puts}
+      3.times{puts}
     end
     letterline
-    BOARD_SIZE.times{puts}
+    3.times{puts}
   end
   
-  # this will be harder to generalize, maybe
   def letterline
-    letters = ["a", "b", "c"]
     print "             "
     (0..BOARD_SIZE-1).each do |i|
-      print letters[i]
+      print LETTERS[i]
       print "      "
     end
   end
