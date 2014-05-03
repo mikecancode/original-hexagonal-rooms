@@ -3,7 +3,10 @@ class Battleships
   # This version of Battleships uses one general instance variable called @ships, 
   # which will allow for any board size up to 8, by changing the value of BOARD_SIZE.
   
-  BOARD_SIZE = 4
+  # The proportions may be off.
+  # Consider: Less ships per board size, or a higher guess limit.
+  
+  BOARD_SIZE = 8
   NUMBER_OF_SHIPS = BOARD_SIZE - 1
   
   # Not sure what to do about the fact that there are a finite number of these symbols.
@@ -11,8 +14,8 @@ class Battleships
   
   SHIP_SYMBOLS =  { 1 => "*",
                     2 => "@",
-                    3 => "0",
-                    4 => "8",
+                    3 => "&",
+                    4 => "#",
                     5 => "%",
                     6 => "$",
                     7 => "+"
@@ -22,12 +25,15 @@ class Battleships
   
   LETTERS = ["a", "b", "c", "d", "e", "f", "g", "h"]
   
-  @players_board = []
-  @ships = []
-  @winning_board = []
-  @wins = []
-  @win_requirement = nil
-  @guess_limit = nil
+  def initialize
+    @players_board = []
+    @ships = []
+    @winning_board = []
+    @hits = []
+    @hit_count = nil
+    @win_requirement = nil
+    @guess_limit = nil
+  end
   
   def prompt
     puts
@@ -46,22 +52,16 @@ class Battleships
         ship_size = NUMBER_OF_SHIPS - i
         x, y = rand(BOARD_SIZE - ship_size), rand(BOARD_SIZE)
         if [:horizontal, :vertical].sample == :horizontal
-          puts "horizontal"
           (0..ship_size - 1).each { |j| ship.push([x + j, y]) }
         else
-          puts "vertical"
           (0..ship_size - 1).each { |j| ship.push([y, x + j]) }
         end        
-        print ship; puts
       end
-#      print ship; puts
       @ships.push(ship)
     end
-#    print @ships; puts    
   end
 
-  # Below is the helper function that checks for overlaps in place_ships
-  # Originally i had:
+  # Below is the original helper function that checks for overlaps in place_ships
   
   # def ship_overlaps?(new_ship)
   #   @ships.each do |ship|
@@ -88,6 +88,7 @@ class Battleships
   # Below is the third version of the helper function
   # It does work - compares apples to apples, not the above problem
   # I'm wondering if it could be refactored to be better
+  # Anshul says it's good as is; leaving it
   
   def ship_overlaps?(new_ship)
     @ships.each do |ship|
@@ -106,15 +107,19 @@ class Battleships
     end
   end
 
-  # This was my first use of reduce
+  # This was my first use of reduce!
   
-  def set_win_and_tries_requirements
+  def setup_game_size
     @win_requirement = (1..NUMBER_OF_SHIPS).reduce(:+)
     @guess_limit = BOARD_SIZE ** 2 / 2
   end
 
+  def setup_hit_count
+    @hit_count = 0
+    @hits = ["seed"]
+  end    
+
   def setup_round
-    @wins = ["seed"]
 
     # Need to refactor the following two lines; see IMs with Anshul
     @players_board = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE, nil) }
@@ -122,7 +127,8 @@ class Battleships
 
     place_ships
     create_winning_board
-    set_win_and_tries_requirements
+    setup_game_size
+    setup_hit_count
   end
   
   def cheat
@@ -131,27 +137,21 @@ class Battleships
       puts
     end
   end
-
-  # Everything above is done for the moment except refactoring creating the nil boards
-  
-  # Everything else below is in the process of being debugged
-  # It runs but the win condition is not met correctly - otherwise seems to work
   
   def play
     setup_round
     puts
     puts
-    tries = 0
-    while @wins.length < @win_requirement
+    guess_number = 0
+    while @hit_count < @win_requirement
       cheat
-      tries += 1
+      guess_number += 1
       show_board(@players_board)
-      show_board(@winning_board)
-      guess = any_errors?(take_and_check_guess(tries))
+      guess = any_errors?(take_and_check_guess(guess, guess_number))
       result = hit_or_miss(translate(guess))
       show_board(@players_board)
-      if @wins.length < @win_requirement
-        if tries == @guess_limit
+      if @hit_count < @win_requirement
+        if guess_number == @guess_limit
           puts "Sorry, you've exceeded your guess limit."
           puts "Please try again later."
           return
@@ -166,13 +166,15 @@ class Battleships
     puts
   end
 
-  def take_and_check_guess(tries)
+  def take_and_check_guess(guess, guess_number)
     puts "There are #{NUMBER_OF_SHIPS} ships out there in the ocean."
     puts "One of each length from 1 to #{NUMBER_OF_SHIPS}."
-    puts "See if you can find them in #{@guess_limit} tries or less."
+    puts "See if you can find them in #{@guess_limit} guesses or less."
+    puts
+    puts "You have #{@guess_limit - guess_number + 1} guesses left."
     puts "Have a guess (like a1, b3, etc.)!"
     puts
-    puts "Try Number #{tries}:"
+    puts "Guess Number #{guess_number}:"
     guess = prompt
   end
 
@@ -184,7 +186,7 @@ class Battleships
   # My first use of splat below, in the condition
 
   def guess_kosher?(guess)
-    while guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].to_s.include? guess[1] )
+    while guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
       puts "Please try again and type a legitimate guess."
       guess = prompt
     end
@@ -192,7 +194,7 @@ class Battleships
   end
 
   def already_got_right?(guess)
-    while @wins.include?(guess)
+    while @hits.include?(translate(guess))
       puts "You already got that one right! Please try a new guess."
       guess = prompt
     end
@@ -209,12 +211,11 @@ class Battleships
     (0..NUMBER_OF_SHIPS - 1).each do |i|
       ship_size = NUMBER_OF_SHIPS - i
       ship_size.times do |j|
-        print [guess[0], guess[1]]; puts
         if [guess[0], guess[1]] == @ships[i][j]
           puts
           puts "Congratulations!  You've scored a hit on the #{SHIP_SYMBOLS[ship_size]} ship!"
           add_to_wins(guess, ship_size)
-          if (@wins & @ships[i]).length == @ships[i].length
+          if (@hits & @ships[i]).length == @ships[i].length
             puts
             puts "Congratulations!  You've sunk the #{SHIP_SYMBOLS[ship_size]} ship!"
           end
@@ -227,7 +228,8 @@ class Battleships
   end
 
   def add_to_wins(guess, size)
-    @wins.push(guess)
+    @hits.push(guess)
+    @hit_count += 1
     @players_board[guess[0]][guess[1]] = SHIP_SYMBOLS[size]
   end
     
