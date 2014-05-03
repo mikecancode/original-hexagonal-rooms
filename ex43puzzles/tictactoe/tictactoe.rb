@@ -15,27 +15,26 @@ class TicTacToe
     puts
     puts "This is an empty board:"
     vertical_edging
-    3.times{vertical_line_bits}
-    horizontal_line
-    puts
-    3.times{vertical_line_bits}
-    horizontal_line
-    puts
+    2.times do
+      3.times{vertical_line_bits}
+      horizontal_line
+      puts
+    end
     3.times{vertical_line_bits}
     vertical_edging
   end
 
   def vertical_line_bits
-    horizontal_edging
     horizontal_spacing
-    print "|"
-    horizontal_spacing
-    print "|"
+    2.times do
+      horizontal_spacing
+      print "|"
+    end
     puts
   end
 
   def horizontal_line
-    horizontal_edging
+    horizontal_spacing
     20.times{print "-"}
   end    
   
@@ -44,10 +43,6 @@ class TicTacToe
   end
 
   def horizontal_spacing
-    6.times{print " "}            
-  end
-
-  def horizontal_edging
     6.times{print " "}            
   end
     
