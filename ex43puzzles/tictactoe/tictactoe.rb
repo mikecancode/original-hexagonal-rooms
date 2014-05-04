@@ -7,14 +7,58 @@
 
 class TicTacToe
 
+  def initialize
+    @players_symbol = nil
+    @board = Array.new(9, nil)
+  end
+  
   def play
     show_empty_board
     show_board_with_one_play_at_00
+    puts "Would you like to be X or O?"
+    get_and_check_symbol
+    puts "Please enter a whole number between 1 and 9 inclusive."
+    get_and_check_move
   end
 
-  ONE_PLAY = [0,0]
+  def prompt
+    print "> "
+    gets.chomp.downcase
+  end
+  
+  def get_and_check_symbol
+    @players_symbol = (kosher_symbol?(prompt))
+  end
+  
+  def kosher_symbol?(choice)
+    while !(choice == "x" or choice == "o")
+      puts "That choice is neither X nor O!  Please try again."
+      choice = prompt
+    end
+    choice
+  end
+  
+  def get_and_check_move
+    players_move = (kosher_move?(prompt.to_i))
+    @board[players_move-1] = @players_symbol.upcase
+    print @board; puts
+  end
+  
+  def kosher_move?(move)
+    while !(1..9).to_a.include?(move)
+      puts "That is not a whole number between 1 and 9 inclusive!  Please try again."
+      move = prompt
+    end
+    move
+  end
 
-  #    puts "This is a board with one play at (#{ONE_PLAY[0]}, #{ONE_PLAY[1]})"
+  # Below is the code for showing the board.
+  # 2 simple implementations are hard-coded; one play at 0,0 and no plays.
+  # Next I want to implement a version that uses the constant below.
+  # ONE_PLAY = [0,0]
+  # puts "This is a board with one play at (#{ONE_PLAY[0]}, #{ONE_PLAY[1]})"
+  # Then I will start considering what happens to the board view as plays are added.
+  
   def show_board_with_one_play_at_00
     puts
     puts "This is a board with one play at (0,0)"
