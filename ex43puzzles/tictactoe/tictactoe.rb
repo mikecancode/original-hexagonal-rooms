@@ -9,8 +9,32 @@ class TicTacToe
 
   def play
     show_empty_board
+    show_board_with_one_play_at_00
   end
 
+  ONE_PLAY = [0,0]
+
+  #    puts "This is a board with one play at (#{ONE_PLAY[0]}, #{ONE_PLAY[1]})"
+  def show_board_with_one_play_at_00
+    puts
+    puts "This is a board with one play at (0,0)"
+    vertical_edging
+    2.times do
+      3.times{vertical_line_bits}
+      horizontal_line
+      puts
+    end
+    vertical_line_bits
+    horizontal_spacing
+    print "   X   "
+    print "|"
+    horizontal_spacing
+    print "|"
+    putsaf
+    vertical_line_bits
+    vertical_edging
+  end
+  
   def show_empty_board
     puts
     puts "This is an empty board:"
@@ -35,7 +59,11 @@ class TicTacToe
 
   def horizontal_line
     horizontal_spacing
-    20.times{print "-"}
+    2.times do
+      7.times{print "-"}
+      print"|"
+    end
+    7.times{print "-"}
   end    
   
   def vertical_edging
@@ -43,7 +71,7 @@ class TicTacToe
   end
 
   def horizontal_spacing
-    6.times{print " "}            
+    7.times{print " "}            
   end
     
 end
