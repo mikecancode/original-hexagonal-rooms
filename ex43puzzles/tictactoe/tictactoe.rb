@@ -30,7 +30,7 @@ class TicTacToe
     print "|"
     horizontal_spacing
     print "|"
-    putsaf
+    puts
     vertical_line_bits
     vertical_edging
   end
