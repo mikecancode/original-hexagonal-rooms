@@ -17,9 +17,9 @@ class Engine
 	end
 
   def allow_first_character(input, array)
-    array.each do | element |
-      if input == element[0,1] or input == element
-        return element
+    array.each do | word |
+      if input == word[0] or input == word
+        return word
       end
     end
     input
@@ -37,7 +37,6 @@ class Engine
     indicator = true
     while indicator
       puts "Which color do you head towards?"
-#      room = Map.to_room("green")
       room = Map.to_room(allow_first_character(prompt, ["red", "orange", "yellow", "green", "blue", "purple"]))
       if !room
         puts "Please try an actual color!"
@@ -77,20 +76,18 @@ class Engine
 
   def which_way?
     puts "Which way do you want to go?  Left, right, forward, or back?"
-#    direction = "forward"
-    direction = check_legit_direction(allow_first_character(prompt, ["left", "right", "forward", "back"]))
+    direction = direction_legit?(prompt, ["left", "right", "forward", "back"])
     puts
     puts "Ok, you go #{direction}."
     direction
   end
     
-	def check_legit_direction(direction)
-    subjective_directions = ["left", "right", "forward", "back"]
-    while !subjective_directions.include? direction
+	def direction_legit?(direction, directions)
+    while !directions.include?(allow_first_character(direction, directions))
 			puts "Please try an actual direction!"
 			direction = prompt
 		end
-    direction
+    allow_first_character(direction, directions)
 	end
   
 	def counterclockwise(room)
@@ -113,13 +110,11 @@ class Engine
 
   def play_puzzle(room)
     room.machinery_description
-    puts "Do you stay and watch to see what happens?"
-#    play_response = "y"    
+    puts "Do you stay and watch to see what happens?" 
     play_response = prompt
     if play_response == "y"
       if room.brightness <= 2
         room.puzzle_intro_description
-#        round_result = room.play_a_round?("y")
         round_result = room.play_a_round?(prompt)
         if round_result[0] == "win"
           go_to_hub(room, round_result[1])
