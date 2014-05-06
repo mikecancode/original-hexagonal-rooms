@@ -267,19 +267,6 @@ class Battleships
     print " " * 6
   end
     
-  def go_again?
-    puts
-    puts "Would you like to fire another shot? (y/n)"
-    if prompt != "y"
-      puts
-      puts "Would you like to quit? (y/n)"
-      if prompt == "y"
-        return false
-      end
-    end
-    true
-  end
-  
 end
 
 new_game = Battleships.new
