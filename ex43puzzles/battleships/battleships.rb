@@ -5,8 +5,9 @@ class Battleships
   
   # The proportions may be off depending on the game difficulty desired.
   # To alter game difficulty, consider less ships per board size, or a higher guess limit.
+  # Edit: I have increased the guess limit to 3/4 of the board size (rounded).
   
-  BOARD_SIZE = 4
+  BOARD_SIZE = 5
   NUMBER_OF_SHIPS = BOARD_SIZE - 1
   
   # For board sizes greater than 8x8, more symbols need to be added to this hash.
@@ -31,7 +32,7 @@ class Battleships
   
   # Same issue as above: finite number of letters.  Should this go past 8x8?
   
-  LETTERS = ["a", "b", "c", "d", "e", "f", "g", "h"]
+  LETTERS = (97..97 + BOARD_SIZE).map &:chr
   
   def initialize
     @players_board = []
@@ -39,6 +40,7 @@ class Battleships
     @hits = []
     @win_requirement = nil
     @guess_limit = nil
+    @ships_sunk = nil
   end
   
   def prompt
@@ -93,8 +95,7 @@ class Battleships
 
   # Below is the third version of the helper function
   # It does work - compares apples to apples, not the above problem
-  # I'm wondering if it could be refactored to be better
-  # Anshul says it's good as is; leaving it
+  # Anshul says it's good as is; I will leave it
   
   def ship_overlaps?(new_ship)
     @ships.each do |ship|
@@ -109,7 +110,7 @@ class Battleships
   
   def setup_game_size
     @win_requirement = (1..NUMBER_OF_SHIPS).reduce(:+)
-    @guess_limit = BOARD_SIZE ** 2 / 2
+    @guess_limit = (BOARD_SIZE ** 2) * 3/4
   end
 
   def setup_round
@@ -118,7 +119,9 @@ class Battleships
     setup_game_size
   end
   
-  def cheat
+  # show_solution is for debugging, to be able to see where to get hits and misses
+  
+  def show_solution
     (0..NUMBER_OF_SHIPS - 1).each do |i|
       print @ships[i]
       puts
@@ -129,47 +132,58 @@ class Battleships
     setup_round
     puts
     puts
+    @ships_sunk = 0
     guess_number = 0
-    while @hits.length < @win_requirement
-      cheat
+    while @hits.length < @win_requirement      
+#      show_solution
       guess_number += 1
       show_board(@players_board)
-      guess = any_errors?(take_and_check_guess(guess, guess_number))
-      result = hit_or_miss(translate(guess))
-      show_board(@players_board)
-      if @hits.length < @win_requirement
-        if guess_number == @guess_limit
-          puts "Sorry, you've met your guess limit."
-          puts "Please try again later."
-          return
+      guess = (take_guess(guess, guess_number))
+      if guess != "quit"
+        result = hit_or_miss(translate(any_errors?(guess)))
+        if @hits.length < @win_requirement
+          if guess_number == @guess_limit
+            puts
+            puts "Unfortunately you've met your guess limit."
+            puts "Please try again later."
+            puts
+            show_board(@players_board)
+            return
+          end
         end
-        if !go_again?
-          puts "OK, see you later."
-          return
-        end
+      else
+        puts
+        puts "OK, see you later."
+        puts
+        return
       end
     end
+    puts
     puts "Nice job! YOU WIN!"
+    puts
+    show_board(@players_board)
     puts
   end
 
-  def take_and_check_guess(guess, guess_number)
+  def take_guess(guess, guess_number)
     puts "There are #{NUMBER_OF_SHIPS} ships out there in the ocean."
+    puts "You have sunk #{@ships_sunk} of them."
     puts "One of each length from 1 to #{NUMBER_OF_SHIPS}."
     puts "See if you can find them in #{@guess_limit} guesses or less."
     puts
     puts "You have #{@guess_limit - guess_number + 1} guesses left."
-    puts "Have a guess (like a1, b3, etc.)!"
+    puts "Enter your guess! (a1, b3, etc.)"
+    puts "(Or type \"quit\" to quit)"
     puts
     puts "Guess Number #{guess_number}:"
     guess = prompt
-  end
-
+   end
+  
   def any_errors?(guess)
     guess = guess_kosher?(guess)
     guess = already_got_right?(guess)
   end
-
+  
   # My first use of splat below (in the condition)!
 
   def guess_kosher?(guess)
@@ -191,8 +205,6 @@ class Battleships
   def translate(guess)
     guess = [LETTERS.index(guess[0]), guess[1].to_i - 1]
   end
-
-  # Not sure about ship_size - whether it's necessary or useful
       
   def hit_or_miss(guess)
     (0..NUMBER_OF_SHIPS - 1).each do |i|
@@ -203,6 +215,7 @@ class Battleships
           puts "Congratulations!  You've scored a hit on the #{SHIP_NAMES[ship_size]}!"
           add_to_wins(guess, ship_size)
           if (@hits & @ships[i]).length == @ships[i].length
+            @ships_sunk += 1
             puts
             puts "Congratulations!  You've sunk the #{SHIP_NAMES[ship_size]}!"
           end
@@ -210,13 +223,17 @@ class Battleships
         end
       end
     end
-    puts
-    puts "Sorry, that shot was a miss."    
+    deal_with_miss(guess)
   end
 
   def add_to_wins(guess, size)
     @hits.push(guess)
     @players_board[guess[0]][guess[1]] = SHIP_SYMBOLS[size]
+  end
+
+  def deal_with_miss(guess)
+    puts "Sorry, that shot was a miss."    
+    @players_board[guess[0]][guess[1]] = "."
   end
     
   def show_board(board)
@@ -224,11 +241,11 @@ class Battleships
     letterline
     3.times{puts}
     (0..BOARD_SIZE-1).each do |j|      
-      print "      "
+      print " " * 6
       numbercolumn(j)
       (0..BOARD_SIZE-1).each do |i|
         print (board[i][BOARD_SIZE-1-j] or "-")
-        print "      "
+        print " " * 6
       end
       numbercolumn(j)
       3.times{puts}
@@ -238,16 +255,16 @@ class Battleships
   end
   
   def letterline
-    print "             "
+    print " " * 13
     (0..BOARD_SIZE-1).each do |i|
       print LETTERS[i]
-      print "      "
+      print " " * 6
     end
   end
 
   def numbercolumn(i)
     print BOARD_SIZE - i
-    print "      "
+    print " " * 6
   end
     
   def go_again?
