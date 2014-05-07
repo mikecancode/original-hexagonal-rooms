@@ -167,8 +167,8 @@ class Battleships
 
   def take_guess(guess, guess_number)
     puts "There are #{NUMBER_OF_SHIPS} ships out there in the ocean."
-    puts "You have sunk #{@ships_sunk} of them."
     puts "One of each length from 1 to #{NUMBER_OF_SHIPS}."
+    puts "You have sunk #{@ships_sunk} of them."
     puts "See if you can find them in #{@guess_limit} guesses or less."
     puts
     puts "You have #{@guess_limit - guess_number + 1} guesses left."
