@@ -15,6 +15,7 @@ class TicTacToe
   def play
     show_empty_board
     show_board_with_one_play_at_00
+    show_board_with_numbers
     puts "Would you like to be X or O?"
     get_and_check_symbol
     puts "Please enter a whole number between 1 and 9 inclusive."
@@ -53,12 +54,44 @@ class TicTacToe
   end
 
   # Below is the code for showing the board.
-  # 2 simple implementations are hard-coded; one play at 0,0 and no plays.
-  # Next I want to implement a version that uses the constant below.
-  # ONE_PLAY = [0,0]
-  # puts "This is a board with one play at (#{ONE_PLAY[0]}, #{ONE_PLAY[1]})"
-  # Then I will start considering what happens to the board view as plays are added.
+  # 3 simple implementations are hard-coded.
+  # One with the numbers 1 through 9; one with an X at 0,0 and one with no plays.
+  # I need to look at the general form given in the first implementation.
+  # Maybe as the game goes on the numbers are replaced by Xs and Os?
   
+  def show_board_with_numbers
+    puts
+    puts "This is a board with numbers:"
+    vertical_edging
+    vertical_line_bits
+    horizontal_spacing
+    print "   7   "
+    print "|"
+    print "   8   "
+    print "|"
+    print "   9   "
+    puts
+    horizontal_line
+    vertical_line_bits
+    horizontal_line
+    horizontal_spacing
+    print "   4   "
+    print "|"
+    print "   5   "
+    print "|"
+    print "   6   "
+    puts
+    vertical_line_bits
+    horizontal_line
+    horizontal_spacing
+    print "   1   "
+    print "|"
+    print "   2   "
+    print "|"
+    print "   3   "
+    vertical_edging
+  end
+
   def show_board_with_one_play_at_00
     puts
     puts "This is a board with one play at (0,0)"
@@ -74,6 +107,44 @@ class TicTacToe
     print "|"
     horizontal_spacing
     print "|"
+    puts
+    vertical_line_bits
+    vertical_edging
+  end
+
+  def show_board_with_numbers
+    puts
+    puts "This is a board with numbers:"
+    vertical_edging
+    vertical_line_bits
+    horizontal_spacing
+    print "   7   "
+    print "|"
+    print "   8   "
+    print "|"
+    print "   9   "
+    puts
+    vertical_line_bits
+    horizontal_line
+    puts
+    vertical_line_bits
+    horizontal_spacing
+    print "   4   "
+    print "|"
+    print "   5   "
+    print "|"
+    print "   6   "
+    puts
+    vertical_line_bits
+    horizontal_line
+    puts
+    vertical_line_bits
+    horizontal_spacing
+    print "   1   "
+    print "|"
+    print "   2   "
+    print "|"
+    print "   3   "
     puts
     vertical_line_bits
     vertical_edging
