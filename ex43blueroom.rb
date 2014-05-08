@@ -175,7 +175,7 @@ class BlueRoom < PuzzleRoom
   
    def any_errors?(guess)
      while guess_kosher?(guess) or already_hit?(guess)
-       if guess.length != 2 or !( @letters.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
+       if guess.length != 2 or !( @letters.include? guess[0] and [*1..(@board_size)].include? guess[1].to_i )
          puts "Please try again and type a legitimate guess."
        elsif @hits.include?(translate(guess))
          puts "You already got that one right! Please try a new guess."
@@ -186,7 +186,7 @@ class BlueRoom < PuzzleRoom
    end
   
    def guess_kosher?(guess) 
-     guess.length != 2 or !( @letters.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
+     guess.length != 2 or !( @letters.include? guess[0] and [*1..(@board_size)].include? guess[1].to_i )
    end
   
    def already_hit?(guess)
