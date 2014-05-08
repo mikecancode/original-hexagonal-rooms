@@ -56,7 +56,7 @@ class RedRoom < PuzzleRoom
   def play_a_round?(response)
     if @@used_words.size == WORD_ARRAY.size
       win_by_default
-    elsif response == "y"      
+    elsif response == "yes"      
   	  result = play
       if result == "win"
         if brightness == 2

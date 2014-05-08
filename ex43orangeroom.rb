@@ -72,7 +72,7 @@ class OrangeRoom < PuzzleRoom
   end
 
   def play_a_round?(response)
-    if response == "y"      
+    if response == "yes"      
   	  result = play
       if result == "win"
         if brightness == 2

@@ -111,8 +111,8 @@ class Engine
   def play_puzzle(room)
     room.machinery_description
     puts "Do you stay and watch to see what happens?" 
-    play_response = prompt
-    if play_response == "y"
+    play_response = allow_first_character(prompt, ["yes"])
+    if play_response == "yes"
       if room.brightness <= 2
         room.puzzle_intro_description
         round_result = room.play_a_round?(prompt)
