@@ -173,26 +173,25 @@ class BlueRoom < PuzzleRoom
     guess = prompt
    end
   
-  def any_errors?(guess)
-    guess = guess_kosher?(guess)
-    guess = already_got_right?(guess)
-  end
-
-  def guess_kosher?(guess)
-    while guess.length != 2 or !( @letters.include? guess[0] and [*1..(@board_size)].include? guess[1].to_i )
-      puts "Please try again and type a legitimate guess."
-      guess = prompt
-    end
-    guess
-  end
-
-  def already_got_right?(guess)
-    while @hits.include?(translate(guess))
-      puts "You already got that one right! Please try a new guess."
-      guess = prompt
-    end
-    guess
-  end
+   def any_errors?(guess)
+     while guess_kosher?(guess) or already_hit?(guess)
+       if guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
+         puts "Please try again and type a legitimate guess."
+       elsif @hits.include?(translate(guess))
+         puts "You already got that one right! Please try a new guess."
+       end
+       guess = prompt
+     end
+     guess
+   end
+  
+   def guess_kosher?(guess) 
+     guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
+   end
+  
+   def already_hit?(guess)
+     @hits.include?(translate(guess))
+   end
   
   def translate(guess)
     guess = [@letters.index(guess[0]), guess[1].to_i - 1]
