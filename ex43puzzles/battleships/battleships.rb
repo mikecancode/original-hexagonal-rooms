@@ -177,29 +177,28 @@ class Battleships
     puts
     puts "Guess Number #{guess_number}:"
     guess = prompt
-   end
-  
-  def any_errors?(guess)
-    guess = guess_kosher?(guess)
-    guess = already_got_right?(guess)
   end
   
   # My first use of splat below (in the condition)!
 
-  def guess_kosher?(guess)
-    while guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
-      puts "Please try again and type a legitimate guess."
+  def any_errors?(guess)
+    while guess_kosher?(guess) or already_hit?(guess)
+      if guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
+        puts "Please try again and type a legitimate guess."
+      elsif @hits.include?(translate(guess))
+        puts "You already got that one right! Please try a new guess."
+      end
       guess = prompt
     end
     guess
   end
-
-  def already_got_right?(guess)
-    while @hits.include?(translate(guess))
-      puts "You already got that one right! Please try a new guess."
-      guess = prompt
-    end
-    guess
+  
+  def guess_kosher?(guess) 
+    guess.length != 2 or !( LETTERS.include? guess[0] and [*1..(BOARD_SIZE)].include? guess[1].to_i )
+  end
+  
+  def already_hit?(guess)
+    @hits.include?(translate(guess))
   end
   
   def translate(guess)
