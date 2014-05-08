@@ -16,6 +16,7 @@ class TicTacToe
     show_empty_board
     show_board_with_one_play_at_00
     show_board_with_numbers
+    show_board_with_numbers_generalized
     puts "Would you like to be X or O?"
     get_and_check_symbol
     puts "Please enter a whole number between 1 and 9 inclusive."
@@ -47,17 +48,70 @@ class TicTacToe
   
   def kosher_move?(move)
     while !(1..9).to_a.include?(move)
+      puts (1..9).to_a
       puts "That is not a whole number between 1 and 9 inclusive!  Please try again."
-      move = prompt
+      move = prompt.to_i
     end
     move
   end
 
   # Below is the code for showing the board.
-  # 3 simple implementations are hard-coded.
-  # One with the numbers 1 through 9; one with an X at 0,0 and one with no plays.
+  # 3 simple implementations are hard-coded, one more generalized version is there as well.
+  # One with the numbers 1 through 9; one with an X at 0,0, one with no plays;
+  #  then a more generalized version of the one in 1 through 9.
   # I need to look at the general form given in the first implementation.
-  # Maybe as the game goes on the numbers are replaced by Xs and Os?
+  # The plan at this point is that the game goes on the numbers are replaced by Xs and Os.
+  # The more generalized version allows for this by variable substitution.
+  # Though I still like the idea of giant ASCII Xs and Os and smaller numbers.
+  # We'll see if that gets implemented or not.
+  
+  def show_board_with_Xs_and_Os
+    puts
+    puts "This is a board with Xs and Os"
+    vertical edging
+  end
+  
+  def show_board_with_numbers_generalized
+    title = "This is a board with numbers, generalized:"
+    top_bit(title)
+    number_line(7, 8, 9)
+    in_between_framework
+    number_line(4, 5, 6)
+    in_between_framework
+    number_line(1, 2, 3)
+    vertical_line_bits
+    vertical_edging
+  end
+
+  def top_bit(title)
+    puts
+    puts title
+    vertical_edging
+    vertical_line_bits
+    horizontal_spacing
+  end
+
+  def number_line(x, y, z)
+    [x, y].each do |i|
+      print " " * 3
+      print "#{i}"
+      print " " * 3
+      print "|"
+    end
+    print " " * 3
+    print "#{z}"
+    print " " * 3
+    puts
+  end
+
+  def in_between_framework
+    vertical_line_bits
+    horizontal_line
+    puts
+    vertical_line_bits
+    horizontal_spacing
+  end
+
   
   def show_board_with_numbers
     puts
@@ -71,9 +125,10 @@ class TicTacToe
     print "|"
     print "   9   "
     puts
-    horizontal_line
     vertical_line_bits
     horizontal_line
+    puts
+    vertical_line_bits
     horizontal_spacing
     print "   4   "
     print "|"
@@ -83,15 +138,19 @@ class TicTacToe
     puts
     vertical_line_bits
     horizontal_line
+    puts
+    vertical_line_bits
     horizontal_spacing
     print "   1   "
     print "|"
     print "   2   "
     print "|"
     print "   3   "
+    puts
+    vertical_line_bits
     vertical_edging
   end
-
+  
   def show_board_with_one_play_at_00
     puts
     puts "This is a board with one play at (0,0)"
@@ -107,44 +166,6 @@ class TicTacToe
     print "|"
     horizontal_spacing
     print "|"
-    puts
-    vertical_line_bits
-    vertical_edging
-  end
-
-  def show_board_with_numbers
-    puts
-    puts "This is a board with numbers:"
-    vertical_edging
-    vertical_line_bits
-    horizontal_spacing
-    print "   7   "
-    print "|"
-    print "   8   "
-    print "|"
-    print "   9   "
-    puts
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_spacing
-    print "   4   "
-    print "|"
-    print "   5   "
-    print "|"
-    print "   6   "
-    puts
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_spacing
-    print "   1   "
-    print "|"
-    print "   2   "
-    print "|"
-    print "   3   "
     puts
     vertical_line_bits
     vertical_edging
