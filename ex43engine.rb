@@ -115,7 +115,7 @@ class Engine
     if play_response == "yes"
       if room.brightness <= 2
         room.puzzle_intro_description
-        round_result = room.play_a_round?(prompt)
+        round_result = room.play_a_round?(allow_first_character(prompt, ["yes"]))
         if round_result[0] == "win"
           go_to_hub(room, round_result[1])
         elsif round_result[0] == "lose" or round_result[0] == "quit"
