@@ -13,13 +13,33 @@ class TicTacToe
     @top_line = Array.new(3, nil)
     @middle_line = Array.new(3, nil)
     @bottom_line = Array.new(3, nil)
+    @left_column = Array.new(3, nil)
+    @middle_column = Array.new(3, nil)
+    @right_column = Array.new(3, nil)
+    @top_left_to_bottom_right_diagonal = Array.new(3, nil)
+    @bottom_left_to_top_right_diagonal = Array.new(3, nil)
   end
   
   def setup_board
     (0..8).each { |i| @board[i] = i + 1 }
+    get_rows_from_board
+  end
+
+  def get_rows_from_board
     (0..2).each { |i| @top_line[i] = @board[i] }
     (0..2).each { |i| @middle_line[i] = @board[i+3] }
     (0..2).each { |i| @bottom_line[i] = @board[i+6] }
+  end
+
+  def get_columns_from_board
+    (0..2).each { |i| @left_column[i] = @board[3*i] }
+    (0..2).each { |i| @middle_column[i] = @board[3*i+1] }
+    (0..2).each { |i| @right_column[i] = @board[3*i+2] }
+  end
+
+  def get_diagonals_from_board
+    (0..2).each { |i| @top_left_to_bottom_right_diagonal[i] = @board[4*i] }
+    (0..2).each { |i| @bottom_left_to_top_right_diagonal[i] = @board[2*i+2] }
   end
 
   def play
@@ -28,18 +48,29 @@ class TicTacToe
 #    show_board_with_numbers
     setup_board
     show_board_with_numbers_generalized
-    puts "Would you like to be X or O?"
     get_and_check_symbol
     puts "Please enter a whole number between 1 and 9 inclusive."
-    get_and_check_move
+    players_move = get_and_check_move
+    print @board; puts
+    get_rows_from_board
+    show_board_with_numbers_generalized
+    print @top_line; puts
+    print @middle_line; puts
+    print @bottom_line; puts
+    print @left_column; puts
+    print @middle_column; puts
+    print @right_column; puts
+    print @top_left_to_bottom_right_diagonal; puts
+    print @bottom_left_to_top_right_diagonal; puts
   end
-
+        
   def prompt
     print "> "
     gets.chomp.downcase
   end
   
   def get_and_check_symbol
+    puts "Would you like to be X or O?"
     @players_symbol = (kosher_symbol?(prompt))
   end
   
@@ -54,7 +85,6 @@ class TicTacToe
   def get_and_check_move
     players_move = (kosher_move?(prompt.to_i))
     @board[players_move-1] = @players_symbol.upcase
-    print @board; puts
   end
   
   def kosher_move?(move)
@@ -66,6 +96,8 @@ class TicTacToe
     move
   end
 
+  
+  
   # Below is the code for showing the board.
   # 3 simple implementations are hard-coded, one more generalized version is there as well.
   # One with the numbers 1 through 9; one with an X at 0,0, one with no plays;
@@ -75,12 +107,6 @@ class TicTacToe
   # The more generalized version allows for this by variable substitution.
   # Though I still like the idea of giant ASCII Xs and Os and smaller numbers.
   # We'll see if that gets implemented or not.
-  
-  def show_board_with_Xs_and_Os
-    puts
-    puts "This is a board with Xs and Os"
-    vertical edging
-  end
   
   def show_board_with_numbers_generalized
     title = "This is a board with numbers, generalized:"
