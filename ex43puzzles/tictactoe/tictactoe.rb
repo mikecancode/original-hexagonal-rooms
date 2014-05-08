@@ -10,9 +10,9 @@ class TicTacToe
   def initialize
     @players_symbol = nil
     @board = Array.new(9, nil)
-    @top_line = Array.new(3, nil)
-    @middle_line = Array.new(3, nil)
-    @bottom_line = Array.new(3, nil)
+    @top_row = Array.new(3, nil)
+    @middle_row = Array.new(3, nil)
+    @bottom_row = Array.new(3, nil)
     @left_column = Array.new(3, nil)
     @middle_column = Array.new(3, nil)
     @right_column = Array.new(3, nil)
@@ -26,9 +26,9 @@ class TicTacToe
   end
 
   def get_rows_from_board
-    (0..2).each { |i| @top_line[i] = @board[i] }
-    (0..2).each { |i| @middle_line[i] = @board[i+3] }
-    (0..2).each { |i| @bottom_line[i] = @board[i+6] }
+    (0..2).each { |i| @top_row[i] = @board[i] }
+    (0..2).each { |i| @middle_row[i] = @board[i+3] }
+    (0..2).each { |i| @bottom_row[i] = @board[i+6] }
   end
 
   def get_columns_from_board
@@ -42,6 +42,21 @@ class TicTacToe
     (0..2).each { |i| @bottom_left_to_top_right_diagonal[i] = @board[2*i+2] }
   end
 
+  def show_board_arrays
+    get_rows_from_board
+    get_columns_from_board
+    get_diagonals_from_board
+    show_board_with_numbers_generalized
+    print @top_row; puts
+    print @middle_row; puts
+    print @bottom_row; puts
+    print @left_column; puts
+    print @middle_column; puts
+    print @right_column; puts
+    print @top_left_to_bottom_right_diagonal; puts
+    print @bottom_left_to_top_right_diagonal; puts
+  end
+
   def play
 #    show_empty_board
 #    show_board_with_one_play_at_00
@@ -50,18 +65,12 @@ class TicTacToe
     show_board_with_numbers_generalized
     get_and_check_symbol
     puts "Please enter a whole number between 1 and 9 inclusive."
-    players_move = get_and_check_move
-    print @board; puts
-    get_rows_from_board
-    show_board_with_numbers_generalized
-    print @top_line; puts
-    print @middle_line; puts
-    print @bottom_line; puts
-    print @left_column; puts
-    print @middle_column; puts
-    print @right_column; puts
-    print @top_left_to_bottom_right_diagonal; puts
-    print @bottom_left_to_top_right_diagonal; puts
+    while !player_win?
+      players_move = get_and_check_move
+      print @board; puts
+      show_board_arrays
+    end
+    puts "Congratulations!  You've Won!"    
   end
         
   def prompt
@@ -96,7 +105,64 @@ class TicTacToe
     move
   end
 
+  def player_win?
+    if player_has_winning_row?
+      return true
+    elsif player_has_winning_column?
+      return true
+    elsif player_has_winning_diagonal?
+      return true
+    end
+    false
+  end
   
+  def player_has_winning_row?
+    get_rows_from_board
+    [@top_row, @middle_row, @bottom_row].each do |row|
+      j = 0
+      (0..2).each do |i|
+        if row[i] == @players_symbol
+          j += 1
+        end
+        if j == 2
+          return true
+        end
+      end
+    end
+    false
+  end
+  
+  def player_has_winning_column?
+    get_columns_from_board
+    [@left_column, @middle_column, @right_column].each do |column|
+      j = 0
+      (0..2).each do |i|
+        if column[i] == @players_symbol
+          j += 1
+        end
+        if j == 2
+          return true
+        end
+      end
+    end
+    false
+  end
+  
+  def player_has_winning_diagonal?
+    get_diagonals_from_board; puts
+    [@top_left_to_bottom_right_diagonal, @bottom_left_to_top_right_diagonal].each do |diagonal|
+      j = 0
+      (0..2).each do |i|
+        if diagonal[i] == @players_symbol
+          j += 1
+        end
+        if j == 2
+          return true
+        end
+      end
+    end
+    false
+  end
   
   # Below is the code for showing the board.
   # 3 simple implementations are hard-coded, one more generalized version is there as well.
@@ -111,11 +177,11 @@ class TicTacToe
   def show_board_with_numbers_generalized
     title = "This is a board with numbers, generalized:"
     top_bit(title)
-    number_line(@top_line)
+    number_line(@top_row)
     in_between_framework
-    number_line(@middle_line)
+    number_line(@middle_row)
     in_between_framework
-    number_line(@bottom_line)
+    number_line(@bottom_row)
     vertical_line_bits
     vertical_edging
   end
