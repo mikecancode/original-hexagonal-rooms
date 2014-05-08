@@ -10,9 +10,20 @@ class TicTacToe
   def initialize
     @players_symbol = nil
     @board = Array.new(9, nil)
+    @top_line = Array.new(3, nil)
+    @middle_line = Array.new(3, nil)
+    @bottom_line = Array.new(3, nil)
   end
   
+  def setup_board
+    (0..8).each { |i| @board[i] = i + 1 }
+    (0..2).each { |i| @top_line[i] = @board[i+6] }
+    (0..2).each { |i| @middle_line[i] = @board[i+3] }
+    (0..2).each { |i| @bottom_line[i] = @board[i] }
+  end
+
   def play
+    setup_board
     show_empty_board
     show_board_with_one_play_at_00
     show_board_with_numbers
@@ -74,11 +85,11 @@ class TicTacToe
   def show_board_with_numbers_generalized
     title = "This is a board with numbers, generalized:"
     top_bit(title)
-    number_line(7, 8, 9)
+    number_line(@top_line)
     in_between_framework
-    number_line(4, 5, 6)
+    number_line(@middle_line)
     in_between_framework
-    number_line(1, 2, 3)
+    number_line(@bottom_line)
     vertical_line_bits
     vertical_edging
   end
@@ -91,17 +102,17 @@ class TicTacToe
     horizontal_spacing
   end
 
-  def number_line(x, y, z)
-    [x, y].each do |i|
+  def number_line(line_array)
+    (0..2).each do |i|
       print " " * 3
-      print "#{i}"
+      print "#{line_array[i]}"
       print " " * 3
+      if i == 2
+        puts
+        return
+      end
       print "|"
     end
-    print " " * 3
-    print "#{z}"
-    print " " * 3
-    puts
   end
 
   def in_between_framework
