@@ -17,16 +17,16 @@ class TicTacToe
   
   def setup_board
     (0..8).each { |i| @board[i] = i + 1 }
-    (0..2).each { |i| @top_line[i] = @board[i+6] }
+    (0..2).each { |i| @top_line[i] = @board[i] }
     (0..2).each { |i| @middle_line[i] = @board[i+3] }
-    (0..2).each { |i| @bottom_line[i] = @board[i] }
+    (0..2).each { |i| @bottom_line[i] = @board[i+6] }
   end
 
   def play
+#    show_empty_board
+#    show_board_with_one_play_at_00
+#    show_board_with_numbers
     setup_board
-    show_empty_board
-    show_board_with_one_play_at_00
-    show_board_with_numbers
     show_board_with_numbers_generalized
     puts "Would you like to be X or O?"
     get_and_check_symbol
