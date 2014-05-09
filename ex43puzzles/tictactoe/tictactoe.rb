@@ -18,35 +18,33 @@ class TicTacToe
     @right_column = Array.new(3, nil)
     @top_left_to_bottom_right_diagonal = Array.new(3, nil)
     @bottom_left_to_top_right_diagonal = Array.new(3, nil)
+    @triples = Array.new(8, nil)
   end
   
   def setup_board
     (0..8).each { |i| @board[i] = i + 1 }
-    get_rows_from_board
+    get_triples_from_board
   end
 
-  def get_rows_from_board
+  def get_triples_from_board
     (0..2).each { |i| @top_row[i] = @board[i] }
     (0..2).each { |i| @middle_row[i] = @board[i+3] }
     (0..2).each { |i| @bottom_row[i] = @board[i+6] }
-  end
-
-  def get_columns_from_board
     (0..2).each { |i| @left_column[i] = @board[3*i] }
     (0..2).each { |i| @middle_column[i] = @board[3*i+1] }
     (0..2).each { |i| @right_column[i] = @board[3*i+2] }
-  end
-
-  def get_diagonals_from_board
     (0..2).each { |i| @top_left_to_bottom_right_diagonal[i] = @board[4*i] }
-    (0..2).each { |i| @bottom_left_to_top_right_diagonal[i] = @board[2*i+2] }
+    (0..2).each { |i| @bottom_left_to_top_right_diagonal[i] = @board[6-2*i] }
+    @triples = [ @top_row, @middle_row, @bottom_row, @left_column, @middle_column, @right_column,
+                  @top_left_to_bottom_right_diagonal, @bottom_left_to_top_right_diagonal
+                ]
   end
 
-  def show_board_arrays
-    get_rows_from_board
-    get_columns_from_board
-    get_diagonals_from_board
-    show_board_with_numbers_generalized
+  # show_triples is just to view the arrays - won't be used in the final code
+
+  def show_triples
+    get_triples_from_board
+    show_board
     print @top_row; puts
     print @middle_row; puts
     print @bottom_row; puts
@@ -58,18 +56,14 @@ class TicTacToe
   end
 
   def play
-#    show_empty_board
-#    show_board_with_one_play_at_00
-#    show_board_with_numbers
     setup_board
-    show_board_with_numbers_generalized
     get_and_check_symbol
-    puts "Please enter a whole number between 1 and 9 inclusive."
-    while !player_win?
+    while !player_has_winning_triple?
+      show_board    
+      puts "Please enter a whole number between 1 and 9 inclusive."
       players_move = get_and_check_move
-      print @board; puts
-      show_board_arrays
     end
+    show_board
     puts "Congratulations!  You've Won!"    
   end
         
@@ -80,7 +74,7 @@ class TicTacToe
   
   def get_and_check_symbol
     puts "Would you like to be X or O?"
-    @players_symbol = (kosher_symbol?(prompt))
+    @players_symbol = (kosher_symbol?(prompt)).upcase
   end
   
   def kosher_symbol?(choice)
@@ -93,7 +87,7 @@ class TicTacToe
   
   def get_and_check_move
     players_move = (kosher_move?(prompt.to_i))
-    @board[players_move-1] = @players_symbol.upcase
+    @board[players_move-1] = @players_symbol
   end
   
   def kosher_move?(move)
@@ -105,26 +99,15 @@ class TicTacToe
     move
   end
 
-  def player_win?
-    if player_has_winning_row?
-      return true
-    elsif player_has_winning_column?
-      return true
-    elsif player_has_winning_diagonal?
-      return true
-    end
-    false
-  end
-  
-  def player_has_winning_row?
-    get_rows_from_board
-    [@top_row, @middle_row, @bottom_row].each do |row|
-      j = 0
-      (0..2).each do |i|
-        if row[i] == @players_symbol
-          j += 1
+  def player_has_winning_triple?
+    get_triples_from_board
+    @triples.each do |triple|
+      i = 0
+      (0..2).each do |j|
+        if triple[j] == @players_symbol
+          i += 1
         end
-        if j == 2
+        if i == 3
           return true
         end
       end
@@ -132,50 +115,14 @@ class TicTacToe
     false
   end
   
-  def player_has_winning_column?
-    get_columns_from_board
-    [@left_column, @middle_column, @right_column].each do |column|
-      j = 0
-      (0..2).each do |i|
-        if column[i] == @players_symbol
-          j += 1
-        end
-        if j == 2
-          return true
-        end
-      end
-    end
-    false
-  end
+  # Below is the code for showing the board.  Two versions are shown.
+  # One with the numbers 1 through 9 hard-coded, and one which uses the row instance variables.
+  # show_board is the one used in the game; I'm keeping show_board_hard_coded for reference.
+  # Also, I still like the idea of giant ASCII Xs and Os and smaller numbers.
+  # I may still implement that version..
   
-  def player_has_winning_diagonal?
-    get_diagonals_from_board; puts
-    [@top_left_to_bottom_right_diagonal, @bottom_left_to_top_right_diagonal].each do |diagonal|
-      j = 0
-      (0..2).each do |i|
-        if diagonal[i] == @players_symbol
-          j += 1
-        end
-        if j == 2
-          return true
-        end
-      end
-    end
-    false
-  end
-  
-  # Below is the code for showing the board.
-  # 3 simple implementations are hard-coded, one more generalized version is there as well.
-  # One with the numbers 1 through 9; one with an X at 0,0, one with no plays;
-  #  then a more generalized version of the one in 1 through 9.
-  # I need to look at the general form given in the first implementation.
-  # The plan at this point is that the game goes on the numbers are replaced by Xs and Os.
-  # The more generalized version allows for this by variable substitution.
-  # Though I still like the idea of giant ASCII Xs and Os and smaller numbers.
-  # We'll see if that gets implemented or not.
-  
-  def show_board_with_numbers_generalized
-    title = "This is a board with numbers, generalized:"
+  def show_board
+    title = "This is the board:"
     top_bit(title)
     number_line(@top_row)
     in_between_framework
@@ -214,9 +161,34 @@ class TicTacToe
     vertical_line_bits
     horizontal_spacing
   end
-
   
-  def show_board_with_numbers
+  def vertical_line_bits
+    horizontal_spacing
+    2.times do
+      horizontal_spacing
+      print "|"
+    end
+    puts
+  end
+
+  def horizontal_line
+    horizontal_spacing
+    2.times do
+      7.times{print "-"}
+      print"|"
+    end
+    7.times{print "-"}
+  end    
+  
+  def vertical_edging
+    3.times{puts}
+  end
+
+  def horizontal_spacing
+    7.times{print " "}            
+  end
+
+  def show_board_hard_coded
     puts
     puts "This is a board with numbers:"
     vertical_edging
@@ -253,66 +225,7 @@ class TicTacToe
     vertical_line_bits
     vertical_edging
   end
-  
-  def show_board_with_one_play_at_00
-    puts
-    puts "This is a board with one play at (0,0)"
-    vertical_edging
-    2.times do
-      3.times{vertical_line_bits}
-      horizontal_line
-      puts
-    end
-    vertical_line_bits
-    horizontal_spacing
-    print "   X   "
-    print "|"
-    horizontal_spacing
-    print "|"
-    puts
-    vertical_line_bits
-    vertical_edging
-  end
-  
-  def show_empty_board
-    puts
-    puts "This is an empty board:"
-    vertical_edging
-    2.times do
-      3.times{vertical_line_bits}
-      horizontal_line
-      puts
-    end
-    3.times{vertical_line_bits}
-    vertical_edging
-  end
-
-  def vertical_line_bits
-    horizontal_spacing
-    2.times do
-      horizontal_spacing
-      print "|"
-    end
-    puts
-  end
-
-  def horizontal_line
-    horizontal_spacing
-    2.times do
-      7.times{print "-"}
-      print"|"
-    end
-    7.times{print "-"}
-  end    
-  
-  def vertical_edging
-    3.times{puts}
-  end
-
-  def horizontal_spacing
-    7.times{print " "}            
-  end
-    
+      
 end
 
 new_game = TicTacToe.new
