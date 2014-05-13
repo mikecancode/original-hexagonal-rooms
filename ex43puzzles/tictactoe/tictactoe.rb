@@ -44,18 +44,19 @@ class TicTacToe
     board[0] = "X"
     board[2] = "O"
     board[4] = "X"
-    board[5] = "O"
+    board[7] = "O"
     board[8] = "O"
   end
 
   def play
     create_test_board(@board)
-    show_board_with_giant_ascii_art_hard_coded
-    print_an_X
-    puts
-    print_an_O
-    puts
-    print_a_five
+#    show_board_with_giant_ascii_art_hard_coded
+    show_board(@board)
+#    print_an_X
+#    puts
+#    print_an_O
+#    puts
+#    print_a_five
 =begin
     show_board(@board)    
     show_triples
@@ -154,11 +155,11 @@ class TicTacToe
   def ai_plays
     if stalemate?
       stalemate = true
-      return
+      return stalemate
     elsif opportunity_for_ai_win?
       play_AI_win
       win_for_AI = true
-      return
+      return win_for_AI
     elsif player_has_blockable_duple?
       block_duple(duple)
     else
@@ -167,14 +168,11 @@ class TicTacToe
   end
     
   def stalemate?
-  
   end
   
   def invitation
     puts "Please come back and try again."
   end
-
-  
 
   def opportunity_for_AI_win?
   end
@@ -203,76 +201,37 @@ class TicTacToe
   def find_winning_triple
   end
 
-  # Below is the code for showing the board.  Two versions are shown.
-  # One with the numbers 1 through 9 hard-coded, and one which uses the row instance variables.
-  # show_board is the one used in the game; I'm keeping show_board_hard_coded for reference.
-  # Also, I still like the idea of giant ASCII Xs and Os and smaller numbers.
-  # I may still implement that version..
+  # Below is show_board, and its related functions.
+  # It displays whatever is in @board, if @board is passed to it. 
+  # The format is a small number for a nil in @board or a large ASCII symbol for an X or O.
+    
+  def show_board(board)
+    title = "This is the board:"
+    top_bit(title)
+    (0..2).each do |i|
+      (0..4).each do |j|
+        horizontal_edging
+        show_board_row(board, j, i)
+      end
+      if i < 2
+        vertical_line_bits
+        horizontal_line
+        puts
+      else
+        vertical_line_bits
+        vertical_edging
+      end
+    end
+  end
   
-  
-#  def show_board
-#    title = "This is the board:"
-#    top_bit(title)
-#    number_line(@top_row)
-#    in_between_framework
-#    number_line(@middle_row)
-#    in_between_framework
-#    number_line(@bottom_row)
-#    vertical_line_bits
-#    vertical_edging
-#  end
-
-#  def top_bit(title)
-#    puts
-#    puts title
-#    vertical_edging
-#    vertical_line_bits
-#    horizontal_spacing
-#  end
-
-#  def in_between_framework
-#    vertical_line_bits
-#    horizontal_line
-#    puts
-#    vertical_line_bits
-#    horizontal_spacing
-#  end
-  
-  
-=begin  
-  Anshul:  Here's an idea, try something like:
-  def display_cell_row(symbol, cell_number, row_number)
-  row_number is 0, 1, or 2     # edit: or 3 or 4!! -mike
-   Anshul:  cell_number is 1-9
-   me:  so it picks from the symbol or cell_number, depending?
-   Anshul:  yeah, if symbol is non-nil, it will ignore cell_number 
-  in all cases, it returns a 3-char string    # edit: 5-char! -mike
-   Anshul:  then show_board could use that function, calling it when appropriate
-=end
-
-  def vertical_line_bits
-    horizontal_spacing
-    2.times do
-      horizontal_spacing
-      print "|"
+  def show_board_row(board, row_number, which_third)
+    (0..2).each do |i|
+      print display_cell_row(board[i + 3 * which_third], i + 3 * which_third + 1, row_number)
+      if i < 2
+        print "|"
+      end
     end
     puts
-  end
-
-  def horizontal_line
-    horizontal_spacing
-    2.times do
-      print "-" * 13 + "|"
-    end
-    print "-" * 13
-  end    
-  
-  def vertical_edging
-    3.times{puts}
-  end
-
-  def horizontal_spacing
-    print " " * 13      
   end
   
   def display_cell_row(symbol, cell_number, row_number)
@@ -290,7 +249,39 @@ class TicTacToe
       return " " * 6 + (cell_number).to_s + " " * 6
     end
   end
+  
+  def top_bit(title)
+    puts
+    puts title
+    vertical_edging
+    vertical_line_bits
+  end
 
+  def vertical_line_bits
+    horizontal_edging
+    2.times do
+      horizontal_edging
+      print "|"
+    end
+    puts
+  end
+
+  def horizontal_line
+    horizontal_edging
+    2.times do
+      print "-" * 13 + "|"
+    end
+    print "-" * 13
+  end    
+  
+  def vertical_edging
+    3.times{puts}
+  end
+
+  def horizontal_edging
+    print " " * 13      
+  end
+  
   # Nothing belowe this point (and still in the class) will be used in the final version
 
   # The next three methods were just written to test out desplay_cell_row
@@ -323,35 +314,35 @@ class TicTacToe
     puts "This is a very hard-coded board with giant ASCII art and numbers:"
     vertical_edging
     vertical_line_bits
-    horizontal_spacing
+    horizontal_edging
     print "  #       #  "
     print "|"
     print " " * 13
     print "|"
     print "    *****    "
     puts
-    horizontal_spacing
+    horizontal_edging
     print "    #   #    "
     print "|"
     print " " * 13
     print "|"
     print "   *     *   "
     puts
-    horizontal_spacing
+    horizontal_edging
     print "      #      "
     print "|"
     print "      2      "
     print "|"
     print "  *       *  "
     puts
-    horizontal_spacing
+    horizontal_edging
     print "    #   #    "
     print "|"
     print " " * 13
     print "|"
     print "   *     *   "
     puts
-    horizontal_spacing
+    horizontal_edging
     print "  #       #  "
     print "|"
     print " " * 13
@@ -362,35 +353,35 @@ class TicTacToe
     horizontal_line
     puts
     vertical_line_bits
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print "  #       #  "
     print "|"
     print "    *****    "
     puts
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print "    #   #    "
     print "|"
     print "   *     *   "
     puts
-    horizontal_spacing
+    horizontal_edging
     print "      4      "
     print "|"
     print "      #      "
     print "|"
     print "  *       *  "
     puts
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print "    #   #    "
     print "|"
     print "   *     *   "
     puts
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print "  #       #  "
@@ -401,35 +392,35 @@ class TicTacToe
     horizontal_line
     puts
     vertical_line_bits
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print " " * 13
     print "|"
     print "    *****    "
     puts
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print " " * 13
     print "|"
     print "   *     *   "
     puts
-    horizontal_spacing
+    horizontal_edging
     print "      7      "
     print "|"
     print "      8      "
     print "|"
     print "  *       *  "
     puts
-    horizontal_spacing
+    horizontal_edging
     print " " * 13
     print "|"
     print " " * 13
     print "|"
     print "   *     *   "
     puts
-    horizontal_spacing    
+    horizontal_edging    
     print " " * 13
     print "|"
     print " " * 13
@@ -440,46 +431,6 @@ class TicTacToe
     vertical_edging
   end
     
-  # The version below was written to just get a sense of the original (smaller) layout
-  
-  def show_board_hard_coded
-    puts
-    puts "This is a board with numbers:"
-    vertical_edging
-    vertical_line_bits
-    horizontal_spacing
-    print "   7   "
-    print "|"
-    print "   8   "
-    print "|"
-    print "   9   "
-    puts
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_spacing
-    print "   4   "
-    print "|"
-    print "   5   "
-    print "|"
-    print "   6   "
-    puts
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_spacing
-    print "   1   "
-    print "|"
-    print "   2   "
-    print "|"
-    print "   3   "
-    puts
-    vertical_line_bits
-    vertical_edging
-  end
-
 end
 
 new_game = TicTacToe.new
