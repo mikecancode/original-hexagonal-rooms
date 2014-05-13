@@ -7,72 +7,98 @@
 
 class TicTacToe
 
+  # @players_symbol will be either X or O
+  # @board stores either an X, an O, or one of the numbers 1-9 as each element
+  # @triples is an array of 3-element arrays - the 3 rows, 3 columns, and 2 diagonals
+
+  X_DISPLAY = ["  #       #  ", "    #   #    ", "      #      "]
+  O_DISPLAY = ["    *****    ", "   *     *   ", "  *       *  "]
+
   def initialize
-    @players_symbol = nil
-    @board = Array.new(9, nil)
-    @top_row = Array.new(3, nil)
-    @middle_row = Array.new(3, nil)
-    @bottom_row = Array.new(3, nil)
-    @left_column = Array.new(3, nil)
-    @middle_column = Array.new(3, nil)
-    @right_column = Array.new(3, nil)
-    @top_left_to_bottom_right_diagonal = Array.new(3, nil)
-    @bottom_left_to_top_right_diagonal = Array.new(3, nil)
-    @triples = Array.new(8, nil)
+    @board = Array.new(9)
   end
   
-  def setup_board
-    (0..8).each { |i| @board[i] = i + 1 }
-    get_triples_from_board
-  end
-
-  def get_triples_from_board
-    (0..2).each { |i| @top_row[i] = @board[i] }
-    (0..2).each { |i| @middle_row[i] = @board[i+3] }
-    (0..2).each { |i| @bottom_row[i] = @board[i+6] }
-    (0..2).each { |i| @left_column[i] = @board[3*i] }
-    (0..2).each { |i| @middle_column[i] = @board[3*i+1] }
-    (0..2).each { |i| @right_column[i] = @board[3*i+2] }
-    (0..2).each { |i| @top_left_to_bottom_right_diagonal[i] = @board[4*i] }
-    (0..2).each { |i| @bottom_left_to_top_right_diagonal[i] = @board[6-2*i] }
-    @triples = [ @top_row, @middle_row, @bottom_row, @left_column, @middle_column, @right_column,
-                  @top_left_to_bottom_right_diagonal, @bottom_left_to_top_right_diagonal
-                ]
+  def get_triples(board)
+    triples = Array.new(8) { Array.new(3) }
+    (0..2).each do |i|
+      (0..2).each do |j| 
+        triples[i][j] = board[3*i+j]
+        triples[i+3][j] = board[i+3*j]
+        triples[6][j] = board[4*j]
+        triples[7][j] = board[6-2*j]
+      end
+    end
+    print triples
   end
 
   # show_triples is just to view the arrays - won't be used in the final code
 
   def show_triples
-    get_triples_from_board
-    show_board
-    print @top_row; puts
-    print @middle_row; puts
-    print @bottom_row; puts
-    print @left_column; puts
-    print @middle_column; puts
-    print @right_column; puts
-    print @top_left_to_bottom_right_diagonal; puts
-    print @bottom_left_to_top_right_diagonal; puts
+    triples = get_triples(@board)
+    print triples
+#    show_board
+    (0..7).each { |triple| print triples[triple]; puts }
+  end
+
+  def create_test_board(board)
+    board[0] = "X"
+    board[2] = "O"
+    board[4] = "X"
+    board[5] = "O"
+    board[8] = "O"
   end
 
   def play
-    setup_board
-    get_and_check_symbol
-    while !player_has_winning_triple?
-      show_board    
-      puts "Please enter a whole number between 1 and 9 inclusive."
-      players_move = get_and_check_move
+    create_test_board(@board)
+    show_board_with_giant_ascii_art_hard_coded
+    print_an_X
+    puts
+    print_an_O
+    puts
+    print_a_five
+=begin
+    show_board(@board)    
+    show_triples
+    get_check_and_store_symbol
+    win_for_player = false
+    win_for_AI = false
+    stalemate = false
+    loop do
+      if win_for_player?
+        break
+      end
+      show_board
+      please_enter
+      players_move = get_check_and_store_move
+      ai_plays
+      if win_for_AI?
+        win_for_AI = true
+        break
+      end    
     end
     show_board
-    puts "Congratulations!  You've Won!"    
+    if stalemate
+      puts "Looks like a draw."
+      invitation
+    elsif win_for_AI
+      puts "Oh no, the TicTacToe master has won."
+      invitation
+    else
+      puts "Congratulations!  You've Won!"    
+    end
+=end
   end
-        
+
+  def please_enter
+    puts "Please enter ... "
+  end
+
   def prompt
     print "> "
     gets.chomp.downcase
   end
   
-  def get_and_check_symbol
+  def get_check_and_store_symbol
     puts "Would you like to be X or O?"
     @players_symbol = (kosher_symbol?(prompt)).upcase
   end
@@ -85,7 +111,7 @@ class TicTacToe
     choice
   end
   
-  def get_and_check_move
+  def get_check_and_store_move
     players_move = (kosher_move?(prompt.to_i))
     @board[players_move-1] = @players_symbol
   end
@@ -99,69 +125,131 @@ class TicTacToe
     move
   end
 
-  def player_has_winning_triple?
+  def win_for_player?
     get_triples_from_board
+    if any_in_a_row?(3)
+      return true
+    end
+    false
+  end
+  
+  def any_in_a_row?(duple_or_triple)    
+    block_move = nil
     @triples.each do |triple|
       i = 0
       (0..2).each do |j|
         if triple[j] == @players_symbol
           i += 1
+        elsif (0..1).include? triple[j]
+          block_move = triple[j]
         end
-        if i == 3
-          return true
+        if i == duple_or_triple
+          return true, block_move
         end
       end
     end
     false
   end
+
+  def ai_plays
+    if stalemate?
+      stalemate = true
+      return
+    elsif opportunity_for_ai_win?
+      play_AI_win
+      win_for_AI = true
+      return
+    elsif player_has_blockable_duple?
+      block_duple(duple)
+    else
+      play_randomly
+    end      
+  end
+    
+  def stalemate?
   
+  end
+  
+  def invitation
+    puts "Please come back and try again."
+  end
+
+  
+
+  def opportunity_for_AI_win?
+  end
+  
+  def play_AI_win
+  end
+  
+  def player_has_blockable_duple?
+  end
+  
+  def block_duple(duple)
+  end
+  
+  def play_randomly
+  end
+  
+  def win_for_AI?
+  end
+  
+  def get_unplayed_numbers
+    @board.each do |i|
+      (1..9)
+    end
+  end
+  
+  def find_winning_triple
+  end
+
   # Below is the code for showing the board.  Two versions are shown.
   # One with the numbers 1 through 9 hard-coded, and one which uses the row instance variables.
   # show_board is the one used in the game; I'm keeping show_board_hard_coded for reference.
   # Also, I still like the idea of giant ASCII Xs and Os and smaller numbers.
   # I may still implement that version..
   
-  def show_board
-    title = "This is the board:"
-    top_bit(title)
-    number_line(@top_row)
-    in_between_framework
-    number_line(@middle_row)
-    in_between_framework
-    number_line(@bottom_row)
-    vertical_line_bits
-    vertical_edging
-  end
-
-  def top_bit(title)
-    puts
-    puts title
-    vertical_edging
-    vertical_line_bits
-    horizontal_spacing
-  end
-
-  def number_line(line_array)
-    (0..2).each do |i|
-      print " " * 3
-      print "#{line_array[i]}"
-      print " " * 3
-      if i == 2
-        puts
-        return
-      end
-      print "|"
-    end
-  end
-
-  def in_between_framework
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_spacing
-  end
   
+#  def show_board
+#    title = "This is the board:"
+#    top_bit(title)
+#    number_line(@top_row)
+#    in_between_framework
+#    number_line(@middle_row)
+#    in_between_framework
+#    number_line(@bottom_row)
+#    vertical_line_bits
+#    vertical_edging
+#  end
+
+#  def top_bit(title)
+#    puts
+#    puts title
+#    vertical_edging
+#    vertical_line_bits
+#    horizontal_spacing
+#  end
+
+#  def in_between_framework
+#    vertical_line_bits
+#    horizontal_line
+#    puts
+#    vertical_line_bits
+#    horizontal_spacing
+#  end
+  
+  
+=begin  
+  Anshul:  Here's an idea, try something like:
+  def display_cell_row(symbol, cell_number, row_number)
+  row_number is 0, 1, or 2     # edit: or 3 or 4!! -mike
+   Anshul:  cell_number is 1-9
+   me:  so it picks from the symbol or cell_number, depending?
+   Anshul:  yeah, if symbol is non-nil, it will ignore cell_number 
+  in all cases, it returns a 3-char string    # edit: 5-char! -mike
+   Anshul:  then show_board could use that function, calling it when appropriate
+=end
+
   def vertical_line_bits
     horizontal_spacing
     2.times do
@@ -174,10 +262,9 @@ class TicTacToe
   def horizontal_line
     horizontal_spacing
     2.times do
-      7.times{print "-"}
-      print"|"
+      print "-" * 13 + "|"
     end
-    7.times{print "-"}
+    print "-" * 13
   end    
   
   def vertical_edging
@@ -185,9 +272,176 @@ class TicTacToe
   end
 
   def horizontal_spacing
-    7.times{print " "}            
+    print " " * 13      
+  end
+  
+  def display_cell_row(symbol, cell_number, row_number)
+    if symbol == "X" and row_number <= 2
+      return X_DISPLAY[row_number]
+    elsif symbol == "X" and row_number > 2
+      return X_DISPLAY[4 - row_number]
+    elsif symbol == "O" and row_number <= 2
+      return O_DISPLAY[row_number]
+    elsif symbol == "O" and row_number > 2
+      return O_DISPLAY[4 - row_number]
+    elsif row_number != 2
+      return " " * 13
+    else
+      return " " * 6 + (cell_number).to_s + " " * 6
+    end
   end
 
+  # Nothing belowe this point (and still in the class) will be used in the final version
+
+  # The next three methods were just written to test out desplay_cell_row
+
+  def print_an_X
+    (0..4).each do |row|
+      print display_cell_row("X", 1, row)
+      puts
+    end
+  end
+
+  def print_an_O
+    (0..4).each do |row|
+      print display_cell_row("O", 1, row)
+      puts
+    end
+  end
+
+  def print_a_five
+    (0..4).each do |row|
+      print display_cell_row(nil, 5, row)
+      puts
+    end
+  end
+  
+  # Below is the "longhand" version of the bigger board with ASCII art, to get a sense of the layout
+  
+  def show_board_with_giant_ascii_art_hard_coded
+    puts
+    puts "This is a very hard-coded board with giant ASCII art and numbers:"
+    vertical_edging
+    vertical_line_bits
+    horizontal_spacing
+    print "  #       #  "
+    print "|"
+    print " " * 13
+    print "|"
+    print "    *****    "
+    puts
+    horizontal_spacing
+    print "    #   #    "
+    print "|"
+    print " " * 13
+    print "|"
+    print "   *     *   "
+    puts
+    horizontal_spacing
+    print "      #      "
+    print "|"
+    print "      2      "
+    print "|"
+    print "  *       *  "
+    puts
+    horizontal_spacing
+    print "    #   #    "
+    print "|"
+    print " " * 13
+    print "|"
+    print "   *     *   "
+    puts
+    horizontal_spacing
+    print "  #       #  "
+    print "|"
+    print " " * 13
+    print "|"
+    print "    *****    "
+    puts
+    vertical_line_bits
+    horizontal_line
+    puts
+    vertical_line_bits
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print "  #       #  "
+    print "|"
+    print "    *****    "
+    puts
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print "    #   #    "
+    print "|"
+    print "   *     *   "
+    puts
+    horizontal_spacing
+    print "      4      "
+    print "|"
+    print "      #      "
+    print "|"
+    print "  *       *  "
+    puts
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print "    #   #    "
+    print "|"
+    print "   *     *   "
+    puts
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print "  #       #  "
+    print "|"
+    print "    *****    "
+    puts
+    vertical_line_bits
+    horizontal_line
+    puts
+    vertical_line_bits
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print " " * 13
+    print "|"
+    print "    *****    "
+    puts
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print " " * 13
+    print "|"
+    print "   *     *   "
+    puts
+    horizontal_spacing
+    print "      7      "
+    print "|"
+    print "      8      "
+    print "|"
+    print "  *       *  "
+    puts
+    horizontal_spacing
+    print " " * 13
+    print "|"
+    print " " * 13
+    print "|"
+    print "   *     *   "
+    puts
+    horizontal_spacing    
+    print " " * 13
+    print "|"
+    print " " * 13
+    print "|"
+    print "    *****    "
+    puts
+    vertical_line_bits
+    vertical_edging
+  end
+    
+  # The version below was written to just get a sense of the original (smaller) layout
+  
   def show_board_hard_coded
     puts
     puts "This is a board with numbers:"
@@ -225,7 +479,7 @@ class TicTacToe
     vertical_line_bits
     vertical_edging
   end
-      
+
 end
 
 new_game = TicTacToe.new
