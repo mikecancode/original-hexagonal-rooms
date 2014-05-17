@@ -1,21 +1,28 @@
 # This version of TicTacToe will not use an AI that is as intelligent as possible
 # Instead, it will use an algorithm that plays randomly unless a user win is imminent,
-#   in which case it will block that win (two in one line by the user).
+#   in which case it will block that win (two in one line by the user and an empty space).
 # If the user plays and forces a win, it will block randomly and lose.
-# Thus the user can win eventually, in theory, though there is always a chance that
+# Thus the user can win eventually, in theory, though there is always a chance thats
 # the program will get lucky.  So a win from the user is required to win the game.
 
 class TicTacToe
 
   # @players_symbol will be either X or O
-  # @board stores either an X, an O, or one of the numbers 1-9 as each element
+  # @board stores either an X, an O, or nothing as each element
   # @triples is an array of 3-element arrays - the 3 rows, 3 columns, and 2 diagonals
 
-  X_DISPLAY = ["  #       #  ", "    #   #    ", "      #      "]
-  O_DISPLAY = ["    *****    ", "   *     *   ", "  *       *  "]
+  DISPLAY = { "X" => ["    #       #    ",
+                      "      #   #      ",
+                      "        #        "],
+                      
+              "O" => ["      *****      ",
+                      "     *     *     ",
+                      "    *       *    "]
+            }
 
   def initialize
     @board = Array.new(9)
+    @symbols = ["X", "O"]
   end
   
   def get_triples(board)
@@ -28,70 +35,11 @@ class TicTacToe
         triples[7][j] = board[6-2*j]
       end
     end
-    print triples
+    triples
   end
 
-  # show_triples is just to view the arrays - won't be used in the final code
-
-  def show_triples
-    triples = get_triples(@board)
-    print triples
-#    show_board
-    (0..7).each { |triple| print triples[triple]; puts }
-  end
-
-  def create_test_board(board)
-    board[0] = "X"
-    board[2] = "O"
-    board[4] = "X"
-    board[7] = "O"
-    board[8] = "O"
-  end
-
-  def play
-    create_test_board(@board)
-#    show_board_with_giant_ascii_art_hard_coded
-    show_board(@board)
-#    print_an_X
-#    puts
-#    print_an_O
-#    puts
-#    print_a_five
-=begin
-    show_board(@board)    
-    show_triples
-    get_check_and_store_symbol
-    win_for_player = false
-    win_for_AI = false
-    stalemate = false
-    loop do
-      if win_for_player?
-        break
-      end
-      show_board
-      please_enter
-      players_move = get_check_and_store_move
-      ai_plays
-      if win_for_AI?
-        win_for_AI = true
-        break
-      end    
-    end
-    show_board
-    if stalemate
-      puts "Looks like a draw."
-      invitation
-    elsif win_for_AI
-      puts "Oh no, the TicTacToe master has won."
-      invitation
-    else
-      puts "Congratulations!  You've Won!"    
-    end
-=end
-  end
-
-  def please_enter
-    puts "Please enter ... "
+  def invitation
+    puts "Please come back and try again."
   end
 
   def prompt
@@ -99,9 +47,16 @@ class TicTacToe
     gets.chomp.downcase
   end
   
-  def get_check_and_store_symbol
+  def pause
+    puts "The TicTacToe master will now play."
+    puts "Please press enter to see the master's move."
+    prompt
+  end
+  
+  def get_check_and_store_symbols
     puts "Would you like to be X or O?"
-    @players_symbol = (kosher_symbol?(prompt)).upcase
+    @players_symbol = (kosher_symbol?(prompt)).upcase    
+    @ai_symbol = @symbols[(@symbols.index(@players_symbol) + 1).modulo(2)]
   end
   
   def kosher_symbol?(choice)
@@ -112,325 +67,197 @@ class TicTacToe
     choice
   end
   
-  def get_check_and_store_move
-    players_move = (kosher_move?(prompt.to_i))
-    @board[players_move-1] = @players_symbol
+  def get_check_and_store_move(board)
+    puts "Please make your move by entering any of the numbers that are still available on the board."
+    players_move = kosher_move?(prompt.to_i, board)
+    board[players_move-1] = @players_symbol
   end
   
-  def kosher_move?(move)
-    while !(1..9).to_a.include?(move)
-      puts (1..9).to_a
-      puts "That is not a whole number between 1 and 9 inclusive!  Please try again."
+  def kosher_move?(move, board)
+    while !(1..9).to_a.include?(move) or board[move - 1] != nil
+      puts "That is not a number that is still available on the board!  Please try again."
       move = prompt.to_i
     end
     move
   end
-
-  def win_for_player?
-    get_triples_from_board
-    if any_in_a_row?(3)
-      return true
-    end
-    false
-  end
   
-  def any_in_a_row?(duple_or_triple)    
-    block_move = nil
-    @triples.each do |triple|
-      i = 0
-      (0..2).each do |j|
-        if triple[j] == @players_symbol
-          i += 1
-        elsif (0..1).include? triple[j]
-          block_move = triple[j]
-        end
-        if i == duple_or_triple
-          return true, block_move
-        end
+  def play
+    game_state = "start"
+    get_check_and_store_symbols
+    loop do
+      display_board(@board)
+      get_check_and_store_move(@board)
+      display_board(@board)
+      if player_wins?(@board)
+        break
+      elsif stalemate?(@board)
+        game_state = "stalemate"
+        break
       end
-    end
-    false
-  end
-
-  def ai_plays
-    if stalemate?
-      stalemate = true
-      return stalemate
-    elsif opportunity_for_ai_win?
-      play_AI_win
-      win_for_AI = true
-      return win_for_AI
-    elsif player_has_blockable_duple?
-      block_duple(duple)
+      pause
+      ai_plays(@board)     
+      if ai_wins?(@board)
+        display_board(@board)
+        game_state = "ai wins"
+        break
+      elsif stalemate?(@board)
+        display_board(@board)
+        game_state = "stalemate"
+        break
+      end
+    end    
+    if game_state == "stalemate"
+      puts "Looks like a draw."
+      invitation
+    elsif game_state == "ai wins"
+      puts "Oh no, the TicTacToe master has won."
+      invitation
     else
-      play_randomly
+      puts "Congratulations!  You've Won!"    
+    end
+  end  
+
+  # Either a 2 or a 3 should be passed to any_in_a_row? for the count argument,
+  #   depending on whether we are looking for 2 in a row or 3 in a row
+  
+  def ai_plays(board)
+    ai_can_win, winning_triple = any_in_a_row?(board, 2, @ai_symbol)
+    ai_can_block, blockable_triple = any_in_a_row?(board, 2, @players_symbol)
+    if ai_can_win
+      ai_plays_in_cell(winning_triple, board)
+    elsif ai_can_block
+      ai_plays_in_cell(blockable_triple, board)
+    else
+      ai_plays_randomly(board)
     end      
   end
-    
-  def stalemate?
-  end
-  
-  def invitation
-    puts "Please come back and try again."
-  end
 
-  def opportunity_for_AI_win?
-  end
-  
-  def play_AI_win
-  end
-  
-  def player_has_blockable_duple?
-  end
-  
-  def block_duple(duple)
-  end
-  
-  def play_randomly
-  end
-  
-  def win_for_AI?
-  end
-  
-  def get_unplayed_numbers
-    @board.each do |i|
-      (1..9)
+
+
+      
+  # HOW DOES i END UP nil????
+  # SOLVE THIS PROBLEM NEXT    
+
+  # Answer: i = nil if there are a) two player's moves in a 2-triple, so it gets passed no nil cells in triple
+  # need to make sure and return 2-triples from any_in_a_row _only_ if they have a nil cell as well
+
+      
+  def ai_plays_in_cell(triple, board)
+    i = get_triples(board)[triple].index { |cell| cell == nil }
+    if triple == 0 # top row 0,1,2 ---> 0,1,2
+      board[i] = @ai_symbol
+    elsif triple == 1 # middle row 0,1,2 ---> 3,4,5
+      board[i + 3] = @ai_symbol
+    elsif triple == 2 # bottom row 0,1,2 ---> 6,7,8
+      board[i + 6] = @ai_symbol
+    elsif triple == 3 # left column 0,1,2 ---> 0,3,6
+      board[3 * i] = @ai_symbol
+    elsif triple == 4 # middle column 0,1,2 ---> 1,4,7
+      board[3 * i + 1] = @ai_symbol
+    elsif triple == 5 # right column 0,1,2 ---> 2,5,8
+      board[3 * i + 2] = @ai_symbol
+    elsif triple == 6 # 1st diagonal 0,1,2 ---> 0,4,8
+      board[4 * i] = @ai_symbol
+    elsif triple == 7 # 2nd diagonal 0,1,2 ---> 6,4,2
+      board[6 - 2 * i] = @ai_symbol
     end
-  end
+  end              
   
-  def find_winning_triple
+  def ai_plays_randomly(board)
+    board[(board.map.with_index { |element, i| i if element == nil }).compact.sample] = @ai_symbol
   end
 
-  # Below is show_board, and its related functions.
+  def any_in_a_row?(board, count, symbol)
+    get_triples(board).each do |triple|
+      i = 0
+      any_empty_cell = false
+      (0..2).each do |j|
+        if triple[j] == symbol
+          i += 1
+        elsif triple[j] == nil
+          any_empty_cell = true
+        end
+      end
+      if i == count
+        if count == 3
+          return true
+        elsif count == 2 and any_empty_cell == true
+          return true, get_triples(board).index(triple)  # the second argument is for finding an empty space to play in
+        end
+      end
+    end
+    false
+  end
+
+  def player_wins?(board)
+    any_in_a_row?(board, 3, @players_symbol)
+  end
+
+  def stalemate?(board)
+    board_full?(board) and !player_wins?(board) and !ai_wins?(board)
+  end
+  
+  def board_full?(board)
+    board.all?
+  end
+
+  def ai_wins?(board)
+    any_in_a_row?(board, 3, @ai_symbol)
+  end
+
+  # Below is display_board, and its related functions.
   # It displays whatever is in @board, if @board is passed to it. 
-  # The format is a small number for a nil in @board or a large ASCII symbol for an X or O.
+  # The display format is a small number for a nil in @board or a large ASCII symbol for an X or O.
     
-  def show_board(board)
-    title = "This is the board:"
-    top_bit(title)
+  def display_board(board)
+    puts "\nHere is the board so far:"
+    vertical_space
+    puts vertical_line_bits
     (0..2).each do |i|
       (0..4).each do |j|
-        horizontal_edging
-        show_board_row(board, j, i)
+        print horizontal_space
+        puts *(0..2).map { |k| display_cell_row(board[3 * i + k], 3 * i + k + 1, j) }.join("|")
       end
+      puts vertical_line_bits
       if i < 2
-        vertical_line_bits
-        horizontal_line
-        puts
+        puts horizontal_line
+        puts vertical_line_bits
       else
-        vertical_line_bits
-        vertical_edging
+        vertical_space
       end
     end
   end
-  
-  def show_board_row(board, row_number, which_third)
-    (0..2).each do |i|
-      print display_cell_row(board[i + 3 * which_third], i + 3 * which_third + 1, row_number)
-      if i < 2
-        print "|"
-      end
-    end
-    puts
-  end
+    
+  # abs allows for using the symmetry of the X and O displays so DISPLAY only needs 3 elements for each
   
   def display_cell_row(symbol, cell_number, row_number)
-    if symbol == "X" and row_number <= 2
-      return X_DISPLAY[row_number]
-    elsif symbol == "X" and row_number > 2
-      return X_DISPLAY[4 - row_number]
-    elsif symbol == "O" and row_number <= 2
-      return O_DISPLAY[row_number]
-    elsif symbol == "O" and row_number > 2
-      return O_DISPLAY[4 - row_number]
-    elsif row_number != 2
-      return " " * 13
+    if symbol
+      DISPLAY[symbol][ -(row_number - 2).abs + 2 ]
+    elsif row_number == 2
+      " " * 8 + cell_number.to_s + " " * 8
     else
-      return " " * 6 + (cell_number).to_s + " " * 6
+      horizontal_space
     end
   end
   
-  def top_bit(title)
-    puts
-    puts title
-    vertical_edging
-    vertical_line_bits
-  end
+  # Below are four helper functions that are used in display_board and display_cell_row
 
   def vertical_line_bits
-    horizontal_edging
-    2.times do
-      horizontal_edging
-      print "|"
-    end
-    puts
+    horizontal_space + ([horizontal_space] * 3).join("|")
   end
 
   def horizontal_line
-    horizontal_edging
-    2.times do
-      print "-" * 13 + "|"
-    end
-    print "-" * 13
+    horizontal_space + (["-" * 17] * 3).join("|")
   end    
   
-  def vertical_edging
+  def vertical_space
     3.times{puts}
   end
 
-  def horizontal_edging
-    print " " * 13      
-  end
-  
-  # Nothing belowe this point (and still in the class) will be used in the final version
-
-  # The next three methods were just written to test out desplay_cell_row
-
-  def print_an_X
-    (0..4).each do |row|
-      print display_cell_row("X", 1, row)
-      puts
-    end
+  def horizontal_space
+    " " * 17
   end
 
-  def print_an_O
-    (0..4).each do |row|
-      print display_cell_row("O", 1, row)
-      puts
-    end
-  end
-
-  def print_a_five
-    (0..4).each do |row|
-      print display_cell_row(nil, 5, row)
-      puts
-    end
-  end
-  
-  # Below is the "longhand" version of the bigger board with ASCII art, to get a sense of the layout
-  
-  def show_board_with_giant_ascii_art_hard_coded
-    puts
-    puts "This is a very hard-coded board with giant ASCII art and numbers:"
-    vertical_edging
-    vertical_line_bits
-    horizontal_edging
-    print "  #       #  "
-    print "|"
-    print " " * 13
-    print "|"
-    print "    *****    "
-    puts
-    horizontal_edging
-    print "    #   #    "
-    print "|"
-    print " " * 13
-    print "|"
-    print "   *     *   "
-    puts
-    horizontal_edging
-    print "      #      "
-    print "|"
-    print "      2      "
-    print "|"
-    print "  *       *  "
-    puts
-    horizontal_edging
-    print "    #   #    "
-    print "|"
-    print " " * 13
-    print "|"
-    print "   *     *   "
-    puts
-    horizontal_edging
-    print "  #       #  "
-    print "|"
-    print " " * 13
-    print "|"
-    print "    *****    "
-    puts
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print "  #       #  "
-    print "|"
-    print "    *****    "
-    puts
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print "    #   #    "
-    print "|"
-    print "   *     *   "
-    puts
-    horizontal_edging
-    print "      4      "
-    print "|"
-    print "      #      "
-    print "|"
-    print "  *       *  "
-    puts
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print "    #   #    "
-    print "|"
-    print "   *     *   "
-    puts
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print "  #       #  "
-    print "|"
-    print "    *****    "
-    puts
-    vertical_line_bits
-    horizontal_line
-    puts
-    vertical_line_bits
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print " " * 13
-    print "|"
-    print "    *****    "
-    puts
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print " " * 13
-    print "|"
-    print "   *     *   "
-    puts
-    horizontal_edging
-    print "      7      "
-    print "|"
-    print "      8      "
-    print "|"
-    print "  *       *  "
-    puts
-    horizontal_edging
-    print " " * 13
-    print "|"
-    print " " * 13
-    print "|"
-    print "   *     *   "
-    puts
-    horizontal_edging    
-    print " " * 13
-    print "|"
-    print " " * 13
-    print "|"
-    print "    *****    "
-    puts
-    vertical_line_bits
-    vertical_edging
-  end
-    
 end
 
 new_game = TicTacToe.new
