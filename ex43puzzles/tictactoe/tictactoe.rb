@@ -1,15 +1,18 @@
-# This version of TicTacToe will not use an AI that is as intelligent as possible
-# Instead, it will use an algorithm that plays randomly unless a user win is imminent,
-#   in which case it will block that win (two in one line by the user and an empty space).
-# If the user plays and forces a win, it will block randomly and lose.
-# Thus the user can win eventually, in theory, though there is always a chance thats
-# the program will get lucky.  So a win from the user is required to win the game.
+# This version of TicTacToe does not use an AI that is as intelligent as possible
+# Instead, it uses an algorithm that plays randomly unless either an AI win or 
+#   a user win is imminent, in which case it plays to win or block.
+# If the user plays to forces a win, it will block the first spot it finds.
+# Thus the user can win eventually, in theory, though there is always a chance that
+#   the program will get lucky if the user is not paying attention.
+# So a win from the user is required to win the game.
 
 class TicTacToe
 
-  # @players_symbol will be either X or O
-  # @board stores either an X, an O, or nothing as each element
-  # @triples is an array of 3-element arrays - the 3 rows, 3 columns, and 2 diagonals
+  # @players_symbol will be either "X" or "O" - their choice.
+  # @ai_symbol will be whichever the player does not choose.
+  # @board stores either an "X", an "O", or nothing as each element
+  # @triples is an array of 3-element arrays - the 3 rows, 3 columns, and 2 diagonals;
+  #   it is used to check for win and potential win situations.
 
   DISPLAY = { "X" => ["    #       #    ",
                       "      #   #      ",
@@ -29,17 +32,13 @@ class TicTacToe
     triples = Array.new(8) { Array.new(3) }
     (0..2).each do |i|
       (0..2).each do |j| 
-        triples[i][j] = board[3*i+j]
-        triples[i+3][j] = board[i+3*j]
-        triples[6][j] = board[4*j]
-        triples[7][j] = board[6-2*j]
+        triples[i][j] = board[3*i+j]    # rows
+        triples[i+3][j] = board[i+3*j]  # columns
+        triples[6][j] = board[4*j]      # 1st diagonal
+        triples[7][j] = board[6-2*j]    # 2nd diagonal
       end
     end
     triples
-  end
-
-  def invitation
-    puts "Please come back and try again."
   end
 
   def prompt
@@ -47,7 +46,7 @@ class TicTacToe
     gets.chomp.downcase
   end
   
-  def pause
+  def please_press_enter_to_continue
     puts "The TicTacToe master will now play."
     puts "Please press enter to see the master's move."
     prompt
@@ -81,6 +80,8 @@ class TicTacToe
     move
   end
   
+  # play is the main engine of the game.
+  
   def play
     game_state = "start"
     get_check_and_store_symbols
@@ -94,7 +95,7 @@ class TicTacToe
         game_state = "stalemate"
         break
       end
-      pause
+      please_press_enter_to_continue
       ai_plays(@board)     
       if ai_wins?(@board)
         display_board(@board)
@@ -116,10 +117,27 @@ class TicTacToe
       puts "Congratulations!  You've Won!"    
     end
   end  
-
-  # Either a 2 or a 3 should be passed to any_in_a_row? for the count argument,
-  #   depending on whether we are looking for 2 in a row or 3 in a row
   
+  def invitation
+    puts "Please come back and try again."
+  end
+    
+  def player_wins?(board)
+    any_in_a_row?(board, 3, @players_symbol)
+  end
+
+  def stalemate?(board)
+    board_full?(board) and !player_wins?(board) and !ai_wins?(board)
+  end
+  
+  def board_full?(board)
+    board.all?
+  end
+
+  def ai_wins?(board)
+    any_in_a_row?(board, 3, @ai_symbol)
+  end
+
   def ai_plays(board)
     ai_can_win, winning_triple = any_in_a_row?(board, 2, @ai_symbol)
     ai_can_block, blockable_triple = any_in_a_row?(board, 2, @players_symbol)
@@ -131,41 +149,11 @@ class TicTacToe
       ai_plays_randomly(board)
     end      
   end
-
-
-
-      
-  # HOW DOES i END UP nil????
-  # SOLVE THIS PROBLEM NEXT    
-
-  # Answer: i = nil if there are a) two player's moves in a 2-triple, so it gets passed no nil cells in triple
-  # need to make sure and return 2-triples from any_in_a_row _only_ if they have a nil cell as well
-
-      
-  def ai_plays_in_cell(triple, board)
-    i = get_triples(board)[triple].index { |cell| cell == nil }
-    if triple == 0 # top row 0,1,2 ---> 0,1,2
-      board[i] = @ai_symbol
-    elsif triple == 1 # middle row 0,1,2 ---> 3,4,5
-      board[i + 3] = @ai_symbol
-    elsif triple == 2 # bottom row 0,1,2 ---> 6,7,8
-      board[i + 6] = @ai_symbol
-    elsif triple == 3 # left column 0,1,2 ---> 0,3,6
-      board[3 * i] = @ai_symbol
-    elsif triple == 4 # middle column 0,1,2 ---> 1,4,7
-      board[3 * i + 1] = @ai_symbol
-    elsif triple == 5 # right column 0,1,2 ---> 2,5,8
-      board[3 * i + 2] = @ai_symbol
-    elsif triple == 6 # 1st diagonal 0,1,2 ---> 0,4,8
-      board[4 * i] = @ai_symbol
-    elsif triple == 7 # 2nd diagonal 0,1,2 ---> 6,4,2
-      board[6 - 2 * i] = @ai_symbol
-    end
-  end              
   
-  def ai_plays_randomly(board)
-    board[(board.map.with_index { |element, i| i if element == nil }).compact.sample] = @ai_symbol
-  end
+  # count determines whether we are checking for a win (count = 3)
+  #   or looking for a space to play in (count = 2).
+  # In the latter case, the function will return a second argument,
+  #   which is used to find an empty cell to play in.
 
   def any_in_a_row?(board, count, symbol)
     get_triples(board).each do |triple|
@@ -182,27 +170,28 @@ class TicTacToe
         if count == 3
           return true
         elsif count == 2 and any_empty_cell == true
-          return true, get_triples(board).index(triple)  # the second argument is for finding an empty space to play in
+          return true, get_triples(board).index(triple)
         end
       end
     end
     false
   end
 
-  def player_wins?(board)
-    any_in_a_row?(board, 3, @players_symbol)
-  end
-
-  def stalemate?(board)
-    board_full?(board) and !player_wins?(board) and !ai_wins?(board)
-  end
+  def ai_plays_in_cell(triple, board)
+    i = get_triples(board)[triple].index { |cell| cell == nil }
+    if (0..2).include? triple             # rows
+      board[i + 3 * triple] = @ai_symbol
+    elsif (3..5).include? triple          # columns
+      board[3 * i + triple - 3] = @ai_symbol
+    elsif triple == 6                     # 1st diagonal
+      board[4 * i] = @ai_symbol
+    elsif triple == 7                     # 2nd diagonal
+      board[6 - 2 * i] = @ai_symbol
+    end
+  end              
   
-  def board_full?(board)
-    board.all?
-  end
-
-  def ai_wins?(board)
-    any_in_a_row?(board, 3, @ai_symbol)
+  def ai_plays_randomly(board)
+    board[(board.map.with_index { |element, i| i if element == nil }).compact.sample] = @ai_symbol
   end
 
   # Below is display_board, and its related functions.
