@@ -4,9 +4,9 @@ This is a puzzle game masquerading as a text adventure game.  Part of the game i
 
 This project came out of an exercise in Learn Ruby The Hard Way.  I am learning Ruby via building this project, among other things.
 
-To run it, collect all ten .rb files from the main directory into one directory, and type "ruby ex43engine.rb."  At the moment it is incomplete so it will crash if you try to visit certain parts of the blue and purple rooms, and does not have an ending.  The red, orange, yellow, and green rooms do have puzzles to play, however, and navigation throughout all rooms is doable.
+To run it, collect all ten .rb files from the main directory into one directory, and type "ruby ex43engine.rb."
 
-In addition, the five puzzles that exist so far are also collected in the "ex43puzzles folder."  Each of those puzzles run on their own and only need the one file to make a complete game.
+In addition, the six individual puzzles are also collected in the "ex43puzzles folder."  Each of those puzzles run on their own and only need the one file to make a complete game.
 
 hangman.rb was extensively refactored thanks to Anshul's suggestions.  If you want to cheat, uncomment lines 70 and 71.
 
@@ -14,12 +14,17 @@ memory.rb is probably way too hard for the main game and has been scaled down to
 
 anagrams.rb is pretty hard, but there are now hints for every question thanks to my better understanding of regular expressions, and you have 6 categories of which you only have to solve 3 total.
 
-friendlydragon.rb is now complete, including a rigorous testing of every branch of the "adventure".
+friendlydragon.rb is now complete, including testing of every branch of the "adventure".
 
-battleships.rb is now in the finishing stages - it is playable and will need a lot of refactoring.  I removed battleships_coding_notes.txt as well, in order to keep comments inside .rb files (except for this readme).  I added the constraint to the standalone that the user has to find the ships in 7 turns - in the full game the user will get 7, then 6, then 5 guesses in each round.
+battleships.rb is now finished and generalized so that the user plays a different size grid size and number of battleships each round.
 
+tictactoe.rb is also finished, though it will need some refactoring still.
 
 So the most recent updates are as follows:
+
+(5/17/14)
+- Battleships refactored into a generalizeable game, added to blue room.
+- TicTacToe written, running fine but will need some refactoring, added to purple room.
 
 (4/27/14)
 - Battleships minor bug fixed.  Fully playable now as a standalone.
@@ -47,13 +52,9 @@ So the most recent updates are as follows:
 
 The current next set of tasks for the overall game remains the same as yesterday:
 
-1) Continue battleships.rb.  DO NOT move on until the code is finished as a standalone game!  (Learned that from anagrams/ex43yellowroom.)
-2) Integrate the battleships.rb code into ex43blueroom.rb.
-3) Write tictactoe.rb (non AI, program plays poorly enough that a win is required from the player).  DO NOT move on until the code is finished as a standalone game!
-4) Write a boss battle standalone (six questions whose answers include the six colors of the game, without the player knowing)!
-5) Code the ending framework including integrating the boss battle, to be triggered when each room has 3 wins.
-6) Clean up the indenting in all files.
-7) Clean up the code, refactor it and test it extensively (ongoing projects).
-
+1) Write a boss battle standalone (six questions whose answers include the six colors of the game, without the player knowing)!
+2) Code the ending framework including integrating the boss battle, to be triggered when each room has 3 wins.
+3) Clean up the indenting in all files.
+4) Clean up the code, refactor it and test it extensively (ongoing projects).
 
 That's it for now....
