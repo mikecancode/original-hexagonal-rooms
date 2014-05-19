@@ -19,7 +19,6 @@ class HubRoom
   end
   
 	def entrance(win_room)
-    print all_brightnesses
     puts
     puts
     if win_room.brightness <= 2
