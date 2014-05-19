@@ -20,7 +20,13 @@ battleships.rb is now finished and generalized so that the user plays a differen
 
 tictactoe.rb is also finished, though it will need some refactoring still.
 
+And the boss battle, which is part of ex43hubroom.rb, is finished, though it also may need some refactoring and currently ends the game with "exit" - I'm not sure that's the best way to do it.
+
 So the most recent updates are as follows:
+
+(5/19/14)
+- 1st draft of game completed!
+- Final boss battle written and integrated into game using "exit" when player wins - will probably change that.
 
 (5/17/14)
 - Battleships refactored into a generalizeable game, added to blue room.
@@ -52,9 +58,9 @@ So the most recent updates are as follows:
 
 The current next set of tasks for the overall game remains the same as yesterday:
 
-1) Write a boss battle standalone (six questions whose answers include the six colors of the game, without the player knowing)!
-2) Code the ending framework including integrating the boss battle, to be triggered when each room has 3 wins.
-3) Clean up the indenting in all files.
-4) Clean up the code, refactor it and test it extensively (ongoing projects).
+1) Clean up the file names - perhaps remove all the "ex43"s at the beginning.
+2) Clean up the indenting in all files.
+3) Possibly find a better ending than "exit".
+4) Continue refactoring the code, especially tictactoe / purple room.
 
 That's it for now....
