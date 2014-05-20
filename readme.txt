@@ -24,6 +24,13 @@ And the boss battle, which is part of ex43hubroom.rb, is finished, though it als
 
 So the most recent updates are as follows:
 
+(5/20/14)
+- Couple of fixes:
+- In the orange room (memory game), I removed the requirement of typing "y" after every move which really slowed the game down.
+- In the blue room (battleships game), I changed the code so that if the user has 1 turn left, it indicates that as "1 turn" not "1 turns."
+- Most importantly, the game was not winnable!  After you finished all six puzzles, it didn't go to the boss battle.  This has been fixed.
+- Finally, the boss battle was rewritten for (I think) better gameplay and a better "final battle" / game end experience.
+
 (5/19/14)
 - 1st draft of game completed!
 - Final boss battle written and integrated into game using "exit" when player wins - will probably change that.
