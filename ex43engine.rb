@@ -52,7 +52,7 @@ class Engine
     puts
 	  puts "Ok, you head to the #{room.color} glow."
 	  puts
-    puts "You see that it is in fact from coming under a door."
+    puts "You see that it is in fact coming from under a door."
 	  puts "You try the door.  It is unlocked.  You open it and step through."
 	  puts "The door slams shut behind you."
 	  puts "It doesn't look like you're going back through it anytime soon."
