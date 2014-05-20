@@ -167,15 +167,16 @@ class OrangeRoom < PuzzleRoom
 	end
 	
 	def go_again?
-		puts "Would you like to keep trying? (y/n)"
+		puts "Please press enter to continue, or type quit if you want to exit the game."
 		response = prompt
-    while response != "y"
-			if response == "n"
+    while response != ""
+			if response == "quit"
 				puts; puts "OK, see you later."; puts
 				return false
 			else
 				puts
 				puts "I'm sorry, I didn't quite get that.  Could you try again?"
+        puts "Please press enter to continue, or type quit if you want to exit the game."
 				response = prompt
 			end
 		end
