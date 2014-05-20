@@ -111,7 +111,7 @@ class HubRoom
       else
         boss_responds(false)
       end
-      boss_offers_exit
+      boss_offers_exit(numbers_unanswered.length)
     end
   end
   
@@ -137,9 +137,9 @@ class HubRoom
     end
   end
   
-  def boss_offers_exit
+  def boss_offers_exit(numbers_unanswered_length)
     puts
-    puts "The Puzzle Master spins around, glows menacingly, and shouts \"Do you give up?\""
+    puts "The Puzzle Master glows menacingly, and shouts \"Do you give up?\""
     give_up = prompt
     if give_up == "yes" or give_up == "y"
       get_back_in = nil
@@ -150,19 +150,38 @@ class HubRoom
         puts "Would you like to get back into the game?"
         get_back_in = prompt
       end
-    else
+    elsif numbers_unanswered_length == 5
       puts
+      puts "The Puzzle Master spins around once and looks even angrier."
+      puts "There are flickers of fire in his eyes as he shouts again at you:"
       puts "\"OK, GET READY FOR MORE!!!\""
+    elsif numbers_unanswered_length > 0 and numbers_unanswered_length < 5
+      puts
+      puts "The Puzzle Master spins around #{6 - numbers_unanswered_length} times and looks even angrier."
+      puts "There are flickers of fire in his eyes as he shouts again at you:"
+      puts "\"OK, GET READY FOR MORE!!!\""
+    elsif numbers_unanswered_length == 0
+      puts
+      puts
+      puts "\"AAAAAAAAAAARRRRRRRGGGGGGGGGHHHHHHHH!!!!!!!!!!!!\""
+      puts
+      puts
+      puts
+      puts "The Puzzle Master somehow glows even brighter, and begins to spins around and around and around."
+      puts "It looks like he may never will never stop."
+      puts "But then..."
     end
   end
     
   def win_text
     puts
-    puts "The Puzzle Master pauses.  He glows even more intensely and angrily."
-    puts "Suddenly he tilts his head back and lets out a massive roar."
+    puts
+    puts "The Puzzle Master pauses, while still glowing even more intensely and angrily."
+    puts "And suddenly he tilts his head back and lets out a massive roar."
     puts "As he does so all of the colors from the rooms come rushing towards him and merge to form white light."
     puts "The light grows even brighter, then he seems to explode in white light for a second."
     puts "You brace yourself.  But instead the light condenses to a single incredibly bright point, then goes out."
+    puts
     puts
     puts
     puts "You sit in darkness."
@@ -170,18 +189,31 @@ class HubRoom
     puts
     puts
     puts
-    puts "Suddenly you hear a commotion overhead.  You look up and see a trap door opening in the ceiling."
+    puts
+    puts
+    puts "Please press Enter to continue."
+    prompt
+    puts
+    puts
+    puts
+    puts
+    puts
+    puts "After a while you hear a commotion overhead.  You look up and see a trap door opening in the ceiling."
     puts "You can see the night sky and breath fresh air!"
     puts "You hear a helicopter in the distance.  It comes closer and then you can see it."
     puts "Next you see a rope ladder dropping towards you through the hole in the ceiling."
     puts "You grab hold and start climbing."
-    puts "You are pretty sure you can smell the taste of freedom, and it looks like a rainbow of fruit flavors."
+    puts "You are pretty sure you can smell the taste of freedom."
+    puts "And right now freedom smells like the taste of a rainbow of flavors."
+    puts
     puts
     puts "YOU WIN!"
     puts
     puts "THE END"
     puts
     puts
+    puts
+    puts "The Original Hexagonal Rooms 2014"
     puts "Conceived, designed and written by Mike Esposito with help from Anshul Amar and Brian Dunn."
 		puts "Huge Special Thanks to Anshul Amar and Brian Dunn for guidance and inspiration."
   end
