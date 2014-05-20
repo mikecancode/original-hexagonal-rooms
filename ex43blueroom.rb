@@ -165,7 +165,11 @@ class BlueRoom < PuzzleRoom
     puts "You have sunk #{@ships_sunk} of them."
     puts "See if you can sink them all in #{@guess_limit} guesses or less."
     puts
-    puts "You have #{@guess_limit - guess_number + 1} guesses left."
+    if @guess_limit - guess_number + 1 != 1
+      puts "You have #{@guess_limit - guess_number + 1} guesses left."
+    else
+      puts "You have #{@guess_limit - guess_number + 1} guess left."
+    end
     puts "Enter your guess! (a1, b3, etc.)"
     puts "(Or type \"quit\" to quit)"
     puts
