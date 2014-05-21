@@ -4,25 +4,13 @@ This is a puzzle game masquerading as a text adventure game.  Part of the game i
 
 This project came out of an exercise in Learn Ruby The Hard Way.  I am learning Ruby via building this project, among other things.
 
-To run it, collect all ten .rb files from the main directory into one directory, and type "ruby ex43engine.rb."
+To run it, collect all ten .rb files from the main directory into one directory, and type "ruby engine.rb."
 
-In addition, the six individual puzzles are also collected in the "ex43puzzles folder."  Each of those puzzles run on their own and only need the one file to make a complete game.
+The most recent updates are as follows:
 
-hangman.rb was extensively refactored thanks to Anshul's suggestions.  If you want to cheat, uncomment lines 70 and 71.
-
-memory.rb is probably way too hard for the main game and has been scaled down to a 4x4 game for the main game, but I left this version at 6x6 as it is standalone.  I originally wanted themes of sixes for each puzzle but will probably not stick to that at this point).  If you want to cheat, uncomment line 59.
-
-anagrams.rb is pretty hard, but there are now hints for every question thanks to my better understanding of regular expressions, and you have 6 categories of which you only have to solve 3 total.
-
-friendlydragon.rb is now complete, including testing of every branch of the "adventure".
-
-battleships.rb is now finished and generalized so that the user plays a different size grid size and number of battleships each round.
-
-tictactoe.rb is also finished, though it will need some refactoring still.
-
-And the boss battle, which is part of ex43hubroom.rb, is finished, though it also may need some refactoring and currently ends the game with "exit" - I'm not sure that's the best way to do it.
-
-So the most recent updates are as follows:
+(5/21/14)
+- Cleaned up the directory, including renaming the files more clearly and getting rid of unnecessary files.
+- Tested the game some more.
 
 (5/20/14)
 - Couple of fixes:
@@ -65,9 +53,8 @@ So the most recent updates are as follows:
 
 The current next set of tasks for the overall game remains the same as yesterday:
 
-1) Clean up the file names - perhaps remove all the "ex43"s at the beginning.
-2) Clean up the indenting in all files.
-3) Possibly find a better ending than "exit".
-4) Continue refactoring the code, especially tictactoe / purple room.
+1) Clean up the indenting in all files.
+2) Continue refactoring the code, especially the initialize functions in the color rooms.
+3) Deal with the giant stacktrace problem that happens when you quit out of the game.
 
 That's it for now....
