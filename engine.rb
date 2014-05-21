@@ -1,12 +1,12 @@
-require_relative "ex43puzzleroom"
-require_relative "ex43redroom"
-require_relative "ex43orangeroom"
-require_relative "ex43yellowroom"
-require_relative "ex43greenroom"
-require_relative "ex43blueroom"
-require_relative "ex43purpleroom"
-require_relative "ex43hubroom"
-require_relative "ex43map"
+require_relative "puzzleroom"
+require_relative "redroom"
+require_relative "orangeroom"
+require_relative "yellowroom"
+require_relative "greenroom"
+require_relative "blueroom"
+require_relative "purpleroom"
+require_relative "hubroom"
+require_relative "map"
 
 class Engine					
 	
