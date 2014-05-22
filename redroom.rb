@@ -19,14 +19,6 @@ class RedRoom < PuzzleRoom
 		"can barely hold the combined weight of the head, torso, two arms, and two legs that it is now supporting."
 		]
 	
-  def initialize
-  	@brightness = 0
-  end
-  
-  def brightness
-    @brightness
-  end
-  
 	def color
 		"red"
 	end

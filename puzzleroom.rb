@@ -1,19 +1,28 @@
 class PuzzleRoom
   
+	BRIGHTNESS_MAPPING = ["barely visible",
+                        "low",
+                        "quite bright",
+                        "ridiculously strong"
+                        ]
+  def initialize
+    @brightness = 0
+  end
+  
   def brightness
 	  @brightness
+  end
+
+  def prompt
+    puts
+    print "> "
+    gets.chomp.downcase
   end
 
   def increase_brightness
 	  @brightness += 1
   end	
 		
-	BRIGHTNESS_MAPPING = ["barely visible",
-                        "low",
-                        "quite bright",
-                        "ridiculously strong"
-                        ]
-  
 	def entrance(direction_youre_facing)
     if objective_direction_index?(direction_youre_facing) % 2 == 1
       puts "You close the door behind you.  It doesn't lock or anything sinister."

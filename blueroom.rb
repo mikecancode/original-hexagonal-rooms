@@ -19,11 +19,7 @@ class BlueRoom < PuzzleRoom
                     6 => "Abandoned Water Treatment Plant",
                     7 => "Floating Death Star"
                   }
-
-  def initialize
-		@brightness = 0
-	end
-
+                  
 	def color
 		"blue"
 	end
@@ -76,12 +72,6 @@ class BlueRoom < PuzzleRoom
       puts "OK, see you later."
       return "lose"
     end
-  end
-
-  def prompt
-    puts
-    print "> "
-    response = gets.chomp.downcase
   end
     
   def place_ships

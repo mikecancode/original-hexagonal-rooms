@@ -74,14 +74,6 @@ class YellowRoom < PuzzleRoom
              "Know Rye" => "New York"
            }
 
-	def initialize
-		@brightness = 0
-	end
-
-  def brightness
-    @brightness
-  end
-
 	def color
 		"yellow"
 	end
@@ -89,11 +81,6 @@ class YellowRoom < PuzzleRoom
   def start_fresh_game
     @current_list = nil
     @score = 0
-  end
-  
-  def prompt
-    print "> "
-    response = gets.chomp
   end
   
   def puzzle_intro_description
@@ -130,6 +117,12 @@ class YellowRoom < PuzzleRoom
       puts
       return "no_play"
     end
+  end
+  
+  def prompt
+    puts
+    print "> "
+    gets.chomp
   end
   
   def play
@@ -170,9 +163,10 @@ class YellowRoom < PuzzleRoom
   def ask_question(question, answer, question_number)
     (0..1).each do |i|
       puts
-      puts question_number.to_s + ") Rewrite."
-      puts question
       puts
+      puts question_number.to_s + ") Rewrite."
+      puts
+      puts question
       if prompt == answer
         puts
         puts "Well done!"

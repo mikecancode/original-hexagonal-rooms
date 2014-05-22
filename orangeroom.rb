@@ -15,14 +15,6 @@ class OrangeRoom < PuzzleRoom
 	
 	TRANSLATE = { "a" => 0, "b" => 1, "c" => 2, "d" => 3 }
 
-	def initialize
-		@brightness = 0
-	end
-
-  def brightness
-    @brightness
-  end
-	
   def color
 		"orange"
 	end
@@ -160,12 +152,7 @@ class OrangeRoom < PuzzleRoom
 		 false
 		end
 	end
-  
-	def prompt
-		print "> "
-    response = gets.chomp.downcase
-	end
-	
+  	
 	def go_again?
 		puts "Please press enter to continue, or type quit if you want to exit the game."
 		response = prompt

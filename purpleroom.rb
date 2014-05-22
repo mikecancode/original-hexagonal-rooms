@@ -8,15 +8,7 @@ class PurpleRoom < PuzzleRoom
                       "     *     *     ",
                       "    *       *    "]
             }
-
-	def initialize
-		@brightness = 0
-	end
-
-  def brightness
-    @brightness
-  end
-
+	
 	def color
 		"purple"
 	end
@@ -78,13 +70,7 @@ class PurpleRoom < PuzzleRoom
     end
     triples
   end
-
-  def prompt
-    puts
-    print "> "
-    gets.chomp.downcase
-  end
-  
+    
   def please_press_enter_to_continue
     puts "The TicTacToe master will now play."
     puts "Please press enter to see the master's move."
@@ -204,7 +190,7 @@ class PurpleRoom < PuzzleRoom
       (0..2).each do |j|
         if triple[j] == symbol
           i += 1
-        elsif triple[j] == nil
+        elsif !triple[j]
           any_empty_cell = true
         end
       end

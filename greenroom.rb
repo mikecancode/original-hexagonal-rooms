@@ -95,14 +95,6 @@ class GreenRoom < PuzzleRoom
                       ]
                     ]
 
-	def initialize
-		@brightness = 0
-	end
-
-  def brightness
-    @brightness
-  end
-
 	def color
 		"green"
 	end
@@ -119,38 +111,38 @@ class GreenRoom < PuzzleRoom
   end
   
   def play_a_round?(response)
-     if response == "yes"	
-       result = play
-  	   if result == "win"
-         if brightness == 2
-           puts
-  		     puts "You've bested the Dragon!  Nice One!"
-  		     puts "That deserves a ROAR from the Dragon!"
-  		     puts
-  	       puts "ROAR"
-  	       puts
-  	       return "win", "complete"
-         else
-           return "win", "incomplete"
-         end
-       else
-         return "lose", "incomplete"
-       end
-     else
-       puts
-       puts "OK, see you later."
-       puts
-       return "no_play"
-     end
-   end
-  
+    if response == "yes"	
+      result = play
+  	  if result == "win"
+        if brightness == 2
+          puts
+  		    puts "You've bested the Dragon!  Nice One!"
+  		    puts "That deserves a ROAR from the Dragon!"
+  		    puts
+  	      puts "ROAR"
+  	      puts
+  	      return "win", "complete"
+        else
+          return "win", "incomplete"
+        end
+      else
+        return "lose", "incomplete"
+      end
+    else
+      puts
+      puts "OK, see you later."
+      puts
+      return "no_play"
+    end
+  end
+    
   def prompt
     puts
     puts "Please choose a, b, or c."
     print "> "
     response = gets.chomp.downcase
   end
-  
+
   def play
     (0..2).each do |i|
       (0..brightness).each do |j|
