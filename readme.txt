@@ -8,6 +8,11 @@ To run it, collect all ten .rb files from the main directory into one directory,
 
 The most recent updates are as follows:
 
+(5/22/14)
+
+- Moved all initialize and brightness functions out of the color room classes and into the PuzzleRoom class to avoid repetition.
+- Moved SOME of the prompt functions out of their color room classes into the PuzzleRoom class - some of them are unique to their games so did not move those.
+
 (5/21/14)
 - Cleaned up the directory, including renaming the files more clearly and getting rid of unnecessary files.
 - Tested the game some more.
@@ -54,7 +59,7 @@ The most recent updates are as follows:
 The current next set of tasks for the overall game remains the same as yesterday:
 
 1) Clean up the indenting in all files.
-2) Continue refactoring the code, especially the initialize functions in the color rooms.
-3) Deal with the giant stacktrace problem that happens when you quit out of the game.
+2) Deal with the giant stacktrace problem that happens when you quit out of the game.
+3) Look the code over for more errors / refactoring possibilities.
 
 That's it for now....
