@@ -2,13 +2,19 @@ The Original Hexagonal Rooms
 
 This is a puzzle game masquerading as a text adventure game.  Part of the game is figuring your way around the rooms.  Then there are puzzles to play in each of them.
 
-This project came out of an exercise in Learn Ruby The Hard Way.  I am learning Ruby via building this project, among other things.
+This project came out of an exercise in Learn Ruby The Hard Way.  I am learning Ruby and used this project along the way.
 
 To run it, collect all ten .rb files from the main directory into one directory, and type "ruby engine.rb."
 
+The current known issues as of 6/6/14:
+
+1) Indenting in some files is not correct.
+2) When user quits the game without winning, there is a giant stacktrace problem.
+3) Plenty of room for refactoring - but this is a first project of this scale, so I was learning a lot as I went.
+
 The most recent updates are as follows:
 
-(5/22/14)
+(5/22/14) - current version completed.
 
 - Moved all initialize and brightness functions out of the color room classes and into the PuzzleRoom class to avoid repetition.
 - Moved SOME of the prompt functions out of their color room classes into the PuzzleRoom class - some of them are unique to their games so did not move those.
@@ -55,11 +61,3 @@ The most recent updates are as follows:
 - Finished friendlydragon.rb and integrated it into the ex43greenroom.rb code.
 - Sorted out the hints for anagrams.rb and integrated them into the ex43yellowroom.rb code as well.
 - I also looked at the spacing of the game's text in general, which was getting pretty crowded to read as you played, and added a bunch of "puts" lines to the following files: ex43redroom.rb, ex43orangeroom.rb, ex43yellowroom.rb, ex43puzzleroom.rb, and ex43engine.rb, to give the text more "breathing room" as you play.  This is just the beginning of this particular aspect of the game design, but I wanted to get started on it and I think it makes play a lot less frustrating.
-
-The current next set of tasks for the overall game remains the same as yesterday:
-
-1) Clean up the indenting in all files.
-2) Deal with the giant stacktrace problem that happens when you quit out of the game.
-3) Look the code over for more errors / refactoring possibilities.
-
-That's it for now....
